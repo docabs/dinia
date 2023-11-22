@@ -1,0 +1,41 @@
+{
+  "name": "dinia",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "module": "dist/dinia.mjs",
+  "unpkg": "dist/dinia.iife.js",
+  "jsdelivr": "dist/dinia.iife.js",
+  "types": "dist/dinia.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/dinia.d.ts",
+      "node": {
+        "import": {
+          "production": "./dist/dinia.prod.cjs",
+          "development": "./dist/dinia.mjs",
+          "default": "./dist/dinia.mjs"
+        },
+        "require": {
+          "production": "./dist/dinia.prod.cjs",
+          "development": "./dist/dinia.cjs",
+          "default": "./index.js"
+        }
+      },
+      "import": "./dist/dinia.mjs",
+      "require": "./index.js"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
+  },
+  "scripts": {
+    "build": "rimraf dist && rollup -c ../../rollup.config.mjs --environment TARGET:dinia",
+    "build:dts": "api-extractor run --local --verbose && tail -n +3 ./src/globalExtensions.ts >> dist/dinia.d.ts",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s --commit-path . -l dinia -r 1",
+    "test:dts": "tsc -p ./test-dts/tsconfig.json",
+    "test": "yarn run build && yarn run build:dts && yarn test:dts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

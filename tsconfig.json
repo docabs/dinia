@@ -1,0 +1,45 @@
+{
+  "include": [
+    "packages/dinia/src/global.d.ts",
+    "packages/*/src/**/*.ts",
+    "packages/*/__tests__/**/*.ts"
+  ],
+  "exclude": [
+    "packages/test-vue-2",
+    "packages/dinia/__tests__/test-utils.ts",
+    "packages/dinia/test-dts",
+    "packages/playground",
+    "packages/online-playground",
+    "packages/nuxt"
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": ".",
+    "outDir": "dist",
+    "sourceMap": false,
+    "noEmit": true,
+    "paths": {
+      "@docabs/dinia/*": ["packages/*/src"],
+      "dinia": ["packages/dinia/src"]
+    },
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "allowJs": false,
+    "skipLibCheck": true,
+    "noUnusedLocals": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": false,
+    "strict": true,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "removeComments": false,
+    "jsx": "preserve",
+    "lib": ["esnext", "dom"],
+    "types": ["vitest", "node", "vite/client"]
+  }
+}
