@@ -1,7 +1,7 @@
 import { Dinia, DiniaPlugin, setActiveDinia, diniaSymbol } from './rootStore'
 import { ref, App, markRaw, effectScope, isDocue2, Ref } from 'docuejs'
 // import { registerDiniaDevtools, devtoolsPlugin } from './devtools'
-// import { IS_CLIENT } from './env'
+import { IS_CLIENT } from './env'
 import { StateTree, StoreGeneric } from './types'
 
 /**
@@ -15,39 +15,39 @@ export function createDinia(): Dinia {
     ref<Record<string, StateTree>>({})
   )!
 
-  //   let _p: Dinia['_p'] = []
-  //   // plugins added before calling app.use(dinia)
-  //   let toBeInstalled: DiniaPlugin[] = []
+  let _p: Dinia['_p'] = []
+  // plugins added before calling app.use(dinia)
+  let toBeInstalled: DiniaPlugin[] = []
 
   const dinia: Dinia = markRaw({
-    //     install(app: App) {
-    //       // this allows calling useStore() outside of a component setup after
-    //       // installing dinia's plugin
-    //       setActiveDinia(dinia)
-    //       if (!isDocue2) {
-    //         dinia._a = app
-    //         app.provide(diniaSymbol, dinia)
-    //         app.config.globalProperties.$dinia = dinia
-    //         /* istanbul ignore else */
-    //         if (__USE_DEVTOOLS__ && IS_CLIENT) {
-    //           registerDiniaDevtools(app, dinia)
-    //         }
-    //         toBeInstalled.forEach((plugin) => _p.push(plugin))
-    //         toBeInstalled = []
-    //       }
-    //     },
-    //     use(plugin) {
-    //       if (!this._a && !isDocue2) {
-    //         toBeInstalled.push(plugin)
-    //       } else {
-    //         _p.push(plugin)
-    //       }
-    //       return this
-    //     },
-    //     _p,
-    //     // it's actually undefined here
-    //     // @ts-expect-error
-    //     _a: null,
+    install(app: App) {
+      // this allows calling useStore() outside of a component setup after
+      // installing dinia's plugin
+      setActiveDinia(dinia)
+      if (!isDocue2) {
+        dinia._a = app
+        app.provide(diniaSymbol, dinia)
+        app.config.globalProperties.$dinia = dinia
+        // /* istanbul ignore else */
+        // if (__USE_DEVTOOLS__ && IS_CLIENT) {
+        //   registerDiniaDevtools(app, dinia)
+        // }
+        toBeInstalled.forEach((plugin) => _p.push(plugin))
+        toBeInstalled = []
+      }
+    },
+    use(plugin) {
+      if (!this._a && !isDocue2) {
+        toBeInstalled.push(plugin)
+      } else {
+        _p.push(plugin)
+      }
+      return this
+    },
+    _p,
+    // it's actually undefined here
+    // @ts-expect-error
+    _a: null,
     _e: scope,
     _s: new Map<string, StoreGeneric>(),
     state,
@@ -69,10 +69,10 @@ export function createDinia(): Dinia {
  * @param dinia - dinia instance
  */
 export function disposeDinia(dinia: Dinia) {
-  // dinia._e.stop()
-  // dinia._s.clear()
-  // dinia._p.splice(0)
-  // dinia.state.value = {}
-  // // @ts-expect-error: non valid
-  // dinia._a = null
+  dinia._e.stop()
+  dinia._s.clear()
+  dinia._p.splice(0)
+  dinia.state.value = {}
+  // @ts-expect-error: non valid
+  dinia._a = null
 }

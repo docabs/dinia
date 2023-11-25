@@ -12,12 +12,12 @@ export type {
 } from './rootStore'
 
 export { defineStore, skipHydrate } from './store'
-// export type {
-//   StoreActions,
-//   StoreGetters,
-//   StoreState,
-//   SetupStoreDefinition,
-// } from './store'
+export type {
+  // StoreActions,
+  StoreGetters,
+  StoreState,
+  // SetupStoreDefinition,
+} from './store'
 
 export type {
   StateTree,
@@ -67,7 +67,7 @@ export { MutationType } from './types'
 //   setMapStoreSuffix,
 // } from './mapHelpers'
 
-// export { storeToRefs } from './storeToRefs'
+export { storeToRefs } from './storeToRefs'
 
 // export type {
 //   MapStoresCustomization,

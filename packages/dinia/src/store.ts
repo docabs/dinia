@@ -41,7 +41,7 @@ import {
   DefineSetupStoreOptions,
   //   DefineStoreOptionsInPlugin,
   StoreGeneric,
-  //   _StoreWithGetters,
+  _StoreWithGetters,
   _ExtractActionsFromSetupStore,
   _ExtractGettersFromSetupStore,
   _ExtractStateFromSetupStore,
@@ -59,14 +59,14 @@ const fallbackRunWithContext = (fn: () => unknown) => fn()
 function mergeReactiveObjects<
   T extends Record<any, unknown> | Map<unknown, unknown> | Set<unknown>
 >(target: T, patchToApply: _DeepPartial<T>): T {
-  //   // Handle Map instances
-  //   if (target instanceof Map && patchToApply instanceof Map) {
-  //     patchToApply.forEach((value, key) => target.set(key, value))
-  //   }
-  //   // Handle Set instances
-  //   if (target instanceof Set && patchToApply instanceof Set) {
-  //     patchToApply.forEach(target.add, target)
-  //   }
+  // Handle Map instances
+  if (target instanceof Map && patchToApply instanceof Map) {
+    patchToApply.forEach((value, key) => target.set(key, value))
+  }
+  // Handle Set instances
+  if (target instanceof Set && patchToApply instanceof Set) {
+    patchToApply.forEach(target.add, target)
+  }
 
   // no need to go through symbols because they cannot be serialized anyway
   for (const key in patchToApply) {
@@ -112,17 +112,17 @@ export function skipHydrate<T = any>(obj: T): T {
     : Object.defineProperty(obj, skipHydrateSymbol, {})
 }
 
-// /**
-//  * Returns whether a value should be hydrated
-//  *
-//  * @param obj - target variable
-//  * @returns true if `obj` should be hydrated
-//  */
-// function shouldHydrate(obj: any) {
-//   return isDocue2
-//     ? /* istanbul ignore next */ !skipHydrateMap.has(obj)
-//     : !isPlainObject(obj) || !obj.hasOwnProperty(skipHydrateSymbol)
-// }
+/**
+ * Returns whether a value should be hydrated
+ *
+ * @param obj - target variable
+ * @returns true if `obj` should be hydrated
+ */
+function shouldHydrate(obj: any) {
+  return isDocue2
+    ? /* istanbul ignore next */ !skipHydrateMap.has(obj)
+    : !isPlainObject(obj) || !obj.hasOwnProperty(skipHydrateSymbol)
+}
 
 const { assign } = Object
 
@@ -493,23 +493,23 @@ function createSetupStore<
         //         // createOptionStore directly sets the state in dinia.state.value so we
         //         // can just skip that
       } else if (!isOptionsStore) {
-        //         // in setup stores we must hydrate the state and sync dinia state tree with the refs the user just created
-        //         if (initialState && shouldHydrate(prop)) {
-        //           if (isRef(prop)) {
-        //             prop.value = initialState[key]
-        //           } else {
-        //             // probably a reactive object, lets recursively assign
-        //             // @ts-expect-error: prop is unknown
-        //             mergeReactiveObjects(prop, initialState[key])
-        //           }
-        //         }
-        //         // transfer the ref to the dinia state to keep everything in sync
-        //         /* istanbul ignore if */
-        //         if (isDocue2) {
-        //           set(dinia.state.value[$id], key, prop)
-        //         } else {
-        //           dinia.state.value[$id][key] = prop
-        //         }
+        // in setup stores we must hydrate the state and sync dinia state tree with the refs the user just created
+        if (initialState && shouldHydrate(prop)) {
+          if (isRef(prop)) {
+            prop.value = initialState[key]
+          } else {
+            // probably a reactive object, lets recursively assign
+            // @ts-expect-error: prop is unknown
+            mergeReactiveObjects(prop, initialState[key])
+          }
+        }
+        // transfer the ref to the dinia state to keep everything in sync
+        /* istanbul ignore if */
+        if (isDocue2) {
+          // set(dinia.state.value[$id], key, prop)
+        } else {
+          dinia.state.value[$id][key] = prop
+        }
       }
       //       /* istanbul ignore else */
       //       if (__DEV__) {
@@ -752,52 +752,52 @@ function createSetupStore<
   return store
 }
 
-// /**
-//  * Extract the actions of a store type. Works with both a Setup Store or an
-//  * Options Store.
-//  */
-// export type StoreActions<SS> = SS extends Store<
-//   string,
-//   StateTree,
-//   _GettersTree<StateTree>,
-//   infer A
-// >
-//   ? A
-//   : _ExtractActionsFromSetupStore<SS>
+/**
+ * Extract the actions of a store type. Works with both a Setup Store or an
+ * Options Store.
+ */
+export type StoreActions<SS> = SS extends Store<
+  string,
+  StateTree,
+  _GettersTree<StateTree>,
+  infer A
+>
+  ? A
+  : _ExtractActionsFromSetupStore<SS>
 
-// /**
-//  * Extract the getters of a store type. Works with both a Setup Store or an
-//  * Options Store.
-//  */
-// export type StoreGetters<SS> = SS extends Store<
-//   string,
-//   StateTree,
-//   infer G,
-//   _ActionsTree
-// >
-//   ? _StoreWithGetters<G>
-//   : _ExtractGettersFromSetupStore<SS>
+/**
+ * Extract the getters of a store type. Works with both a Setup Store or an
+ * Options Store.
+ */
+export type StoreGetters<SS> = SS extends Store<
+  string,
+  StateTree,
+  infer G,
+  _ActionsTree
+>
+  ? _StoreWithGetters<G>
+  : _ExtractGettersFromSetupStore<SS>
 
-// /**
-//  * Extract the state of a store type. Works with both a Setup Store or an
-//  * Options Store. Note this unwraps refs.
-//  */
-// export type StoreState<SS> = SS extends Store<
-//   string,
-//   infer S,
-//   _GettersTree<StateTree>,
-//   _ActionsTree
-// >
-//   ? UnwrapRef<S>
-//   : _ExtractStateFromSetupStore<SS>
+/**
+ * Extract the state of a store type. Works with both a Setup Store or an
+ * Options Store. Note this unwraps refs.
+ */
+export type StoreState<SS> = SS extends Store<
+  string,
+  infer S,
+  _GettersTree<StateTree>,
+  _ActionsTree
+>
+  ? UnwrapRef<S>
+  : _ExtractStateFromSetupStore<SS>
 
-// // type a1 = _ExtractStateFromSetupStore<{ a: Ref<number>; action: () => void }>
-// // type a2 = _ExtractActionsFromSetupStore<{ a: Ref<number>; action: () => void }>
-// // type a3 = _ExtractGettersFromSetupStore<{
-// //   a: Ref<number>
-// //   b: ComputedRef<string>
-// //   action: () => void
-// // }>
+// type a1 = _ExtractStateFromSetupStore<{ a: Ref<number>; action: () => void }>
+// type a2 = _ExtractActionsFromSetupStore<{ a: Ref<number>; action: () => void }>
+// type a3 = _ExtractGettersFromSetupStore<{
+//   a: Ref<number>
+//   b: ComputedRef<string>
+//   action: () => void
+// }>
 
 /**
  * Creates a `useStore` function that retrieves the store instance

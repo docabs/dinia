@@ -49,23 +49,23 @@ export const getActiveDinia = () =>
  * Every application must own its own dinia to be able to create stores
  */
 export interface Dinia {
-  //   install: (app: App) => void
+  install: (app: App) => void
   /**
    * root state
    */
   state: Ref<Record<string, StateTree>>
-  //   /**
-  //    * Adds a store plugin to extend every store
-  //    *
-  //    * @param plugin - store plugin to add
-  //    */
-  //   use(plugin: DiniaPlugin): Dinia
-  //   /**
-  //    * Installed store plugins
-  //    *
-  //    * @internal
-  //    */
-  //   _p: DiniaPlugin[]
+  /**
+   * Adds a store plugin to extend every store
+   *
+   * @param plugin - store plugin to add
+   */
+  use(plugin: DiniaPlugin): Dinia
+  /**
+   * Installed store plugins
+   *
+   * @internal
+   */
+  _p: DiniaPlugin[]
   /**
    * App linked to this Dinia instance
    *
