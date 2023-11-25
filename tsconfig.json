@@ -1,11 +1,12 @@
 {
   "include": [
     "packages/dinia/src/global.d.ts",
+    "packages/global.d.ts",
     "packages/*/src/**/*.ts",
     "packages/*/__tests__/**/*.ts"
   ],
   "exclude": [
-    "packages/test-vue-2",
+    "packages/test-docue-2",
     "packages/dinia/__tests__/test-utils.ts",
     "packages/dinia/test-dts",
     "packages/playground",

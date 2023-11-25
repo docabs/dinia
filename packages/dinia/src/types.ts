@@ -1,161 +1,161 @@
-// import type {
-//   ComputedRef,
-//   DebuggerEvent,
-//   Ref,
-//   UnwrapRef,
-//   WatchOptions,
-// } from 'vue-demi'
-// import { Dinia } from './rootStore'
+import type {
+  ComputedRef,
+  DebuggerEvent,
+  Ref,
+  UnwrapRef,
+  WatchOptions,
+} from 'docuejs'
+import { Dinia } from './rootStore'
 
 /**
  * Generic state of a Store
  */
 export type StateTree = Record<string | number | symbol, any>
 
-// export function isPlainObject<S extends StateTree>(
-//   value: S | unknown
-// ): value is S
-// export function isPlainObject(
-//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   o: any
-// ): o is StateTree {
-//   return (
-//     o &&
-//     typeof o === 'object' &&
-//     Object.prototype.toString.call(o) === '[object Object]' &&
-//     typeof o.toJSON !== 'function'
-//   )
-// }
+export function isPlainObject<S extends StateTree>(
+  value: S | unknown
+): value is S
+export function isPlainObject(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  o: any
+): o is StateTree {
+  return (
+    o &&
+    typeof o === 'object' &&
+    Object.prototype.toString.call(o) === '[object Object]' &&
+    typeof o.toJSON !== 'function'
+  )
+}
 
-// /**
-//  * Recursive `Partial<T>`. Used by {@link Store['$patch']}.
-//  *
-//  * For internal use **only**
-//  */
-// export type _DeepPartial<T> = { [K in keyof T]?: _DeepPartial<T[K]> }
-// // type DeepReadonly<T> = { readonly [P in keyof T]: DeepReadonly<T[P]> }
+/**
+ * Recursive `Partial<T>`. Used by {@link Store['$patch']}.
+ *
+ * For internal use **only**
+ */
+export type _DeepPartial<T> = { [K in keyof T]?: _DeepPartial<T[K]> }
+// type DeepReadonly<T> = { readonly [P in keyof T]: DeepReadonly<T[P]> }
 
-// // TODO: can we change these to numbers?
-// /**
-//  * Possible types for SubscriptionCallback
-//  */
-// export enum MutationType {
-//   /**
-//    * Direct mutation of the state:
-//    *
-//    * - `store.name = 'new name'`
-//    * - `store.$state.name = 'new name'`
-//    * - `store.list.push('new item')`
-//    */
-//   direct = 'direct',
+// TODO: can we change these to numbers?
+/**
+ * Possible types for SubscriptionCallback
+ */
+export enum MutationType {
+  /**
+   * Direct mutation of the state:
+   *
+   * - `store.name = 'new name'`
+   * - `store.$state.name = 'new name'`
+   * - `store.list.push('new item')`
+   */
+  direct = 'direct',
 
-//   /**
-//    * Mutated the state with `$patch` and an object
-//    *
-//    * - `store.$patch({ name: 'newName' })`
-//    */
-//   patchObject = 'patch object',
+  /**
+   * Mutated the state with `$patch` and an object
+   *
+   * - `store.$patch({ name: 'newName' })`
+   */
+  patchObject = 'patch object',
 
-//   /**
-//    * Mutated the state with `$patch` and a function
-//    *
-//    * - `store.$patch(state => state.name = 'newName')`
-//    */
-//   patchFunction = 'patch function',
+  /**
+   * Mutated the state with `$patch` and a function
+   *
+   * - `store.$patch(state => state.name = 'newName')`
+   */
+  patchFunction = 'patch function',
 
-//   // maybe reset? for $state = {} and $reset
-// }
+  // maybe reset? for $state = {} and $reset
+}
 
-// /**
-//  * Base type for the context passed to a subscription callback. Internal type.
-//  */
-// export interface _SubscriptionCallbackMutationBase {
-//   /**
-//    * Type of the mutation.
-//    */
-//   type: MutationType
+/**
+ * Base type for the context passed to a subscription callback. Internal type.
+ */
+export interface _SubscriptionCallbackMutationBase {
+  /**
+   * Type of the mutation.
+   */
+  type: MutationType
 
-//   /**
-//    * `id` of the store doing the mutation.
-//    */
-//   storeId: string
+  /**
+   * `id` of the store doing the mutation.
+   */
+  storeId: string
 
-//   /**
-//    * 🔴 DEV ONLY, DO NOT use for production code. Different mutation calls. Comes from
-//    * https://vuejs.org/guide/extras/reactivity-in-depth.html#reactivity-debugging and allows to track mutations in
-//    * devtools and plugins **during development only**.
-//    */
-//   events?: DebuggerEvent[] | DebuggerEvent
-// }
+  /**
+   * 🔴 DEV ONLY, DO NOT use for production code. Different mutation calls. Comes from
+   * https://docuejs.org/guide/extras/reactivity-in-depth.html#reactivity-debugging and allows to track mutations in
+   * devtools and plugins **during development only**.
+   */
+  events?: DebuggerEvent[] | DebuggerEvent
+}
 
-// /**
-//  * Context passed to a subscription callback when directly mutating the state of
-//  * a store with `store.someState = newValue` or `store.$state.someState =
-//  * newValue`.
-//  */
-// export interface SubscriptionCallbackMutationDirect
-//   extends _SubscriptionCallbackMutationBase {
-//   type: MutationType.direct
+/**
+ * Context passed to a subscription callback when directly mutating the state of
+ * a store with `store.someState = newValue` or `store.$state.someState =
+ * newValue`.
+ */
+export interface SubscriptionCallbackMutationDirect
+  extends _SubscriptionCallbackMutationBase {
+  type: MutationType.direct
 
-//   events: DebuggerEvent
-// }
+  events: DebuggerEvent
+}
 
-// /**
-//  * Context passed to a subscription callback when `store.$patch()` is called
-//  * with an object.
-//  */
-// export interface SubscriptionCallbackMutationPatchObject<S>
-//   extends _SubscriptionCallbackMutationBase {
-//   type: MutationType.patchObject
+/**
+ * Context passed to a subscription callback when `store.$patch()` is called
+ * with an object.
+ */
+export interface SubscriptionCallbackMutationPatchObject<S>
+  extends _SubscriptionCallbackMutationBase {
+  type: MutationType.patchObject
 
-//   events: DebuggerEvent[]
+  events: DebuggerEvent[]
 
-//   /**
-//    * Object passed to `store.$patch()`.
-//    */
-//   payload: _DeepPartial<S>
-// }
+  /**
+   * Object passed to `store.$patch()`.
+   */
+  payload: _DeepPartial<S>
+}
 
-// /**
-//  * Context passed to a subscription callback when `store.$patch()` is called
-//  * with a function.
-//  */
-// export interface SubscriptionCallbackMutationPatchFunction
-//   extends _SubscriptionCallbackMutationBase {
-//   type: MutationType.patchFunction
+/**
+ * Context passed to a subscription callback when `store.$patch()` is called
+ * with a function.
+ */
+export interface SubscriptionCallbackMutationPatchFunction
+  extends _SubscriptionCallbackMutationBase {
+  type: MutationType.patchFunction
 
-//   events: DebuggerEvent[]
+  events: DebuggerEvent[]
 
-//   /**
-//    * Object passed to `store.$patch()`.
-//    */
-//   // payload: DeepPartial<UnwrapRef<S>>
-// }
+  /**
+   * Object passed to `store.$patch()`.
+   */
+  // payload: DeepPartial<UnwrapRef<S>>
+}
 
-// /**
-//  * Context object passed to a subscription callback.
-//  */
-// export type SubscriptionCallbackMutation<S> =
-//   | SubscriptionCallbackMutationDirect
-//   | SubscriptionCallbackMutationPatchObject<S>
-//   | SubscriptionCallbackMutationPatchFunction
+/**
+ * Context object passed to a subscription callback.
+ */
+export type SubscriptionCallbackMutation<S> =
+  | SubscriptionCallbackMutationDirect
+  | SubscriptionCallbackMutationPatchObject<S>
+  | SubscriptionCallbackMutationPatchFunction
 
-// /**
-//  * Callback of a subscription
-//  */
-// export type SubscriptionCallback<S> = (
-//   /**
-//    * Object with information relative to the store mutation that triggered the
-//    * subscription.
-//    */
-//   mutation: SubscriptionCallbackMutation<S>,
+/**
+ * Callback of a subscription
+ */
+export type SubscriptionCallback<S> = (
+  /**
+   * Object with information relative to the store mutation that triggered the
+   * subscription.
+   */
+  mutation: SubscriptionCallbackMutation<S>,
 
-//   /**
-//    * State of the store when the subscription is triggered. Same as
-//    * `store.$state`.
-//    */
-//   state: UnwrapRef<S>
-// ) => void
+  /**
+   * State of the store when the subscription is triggered. Same as
+   * `store.$state`.
+   */
+  state: UnwrapRef<S>
+) => void
 
 // // to support TS 4.4
 // // TODO: remove in 2.1.0, use Awaited, and up the peer dep to TS 4.5
@@ -167,99 +167,95 @@ export type StateTree = Record<string | number | symbol, any>
 //     : never // the argument to `then` was not callable
 //   : T // non-object or non-thenable
 
-// /**
-//  * Actual type for {@link StoreOnActionListenerContext}. Exists for refactoring
-//  * purposes. For internal use only.
-//  * For internal use **only**
-//  */
-// export interface _StoreOnActionListenerContext<
-//   Store,
-//   ActionName extends string,
-//   A
-// > {
-//   /**
-//    * Name of the action
-//    */
-//   name: ActionName
+/**
+ * Actual type for {@link StoreOnActionListenerContext}. Exists for refactoring
+ * purposes. For internal use only.
+ * For internal use **only**
+ */
+export interface _StoreOnActionListenerContext<
+  Store,
+  ActionName extends string,
+  A
+> {
+  /**
+   * Name of the action
+   */
+  name: ActionName
+  /**
+   * Store that is invoking the action
+   */
+  store: Store
+  /**
+   * Parameters passed to the action
+   */
+  args: A extends Record<ActionName, _Method>
+    ? Parameters<A[ActionName]>
+    : unknown[]
+  //   /**
+  //    * Sets up a hook once the action is finished. It receives the return value
+  //    * of the action, if it's a Promise, it will be unwrapped.
+  //    */
+  //   after: (
+  //     callback: A extends Record<ActionName, _Method>
+  //       ? (resolvedReturn: _Awaited<ReturnType<A[ActionName]>>) => void
+  //       : () => void
+  //   ) => void
+  //   /**
+  //    * Sets up a hook if the action fails. Return `false` to catch the error and
+  //    * stop it from propagating.
+  //    */
+  //   onError: (callback: (error: unknown) => void) => void
+}
 
-//   /**
-//    * Store that is invoking the action
-//    */
-//   store: Store
+/**
+ * Context object passed to callbacks of `store.$onAction(context => {})`
+ * TODO: should have only the Id, the Store and Actions to generate the proper object
+ */
+export type StoreOnActionListenerContext<
+  Id extends string,
+  S extends StateTree,
+  G /* extends GettersTree<S> */,
+  A /* extends ActionsTree */
+> = _ActionsTree extends A
+  ? _StoreOnActionListenerContext<StoreGeneric, string, _ActionsTree>
+  : {
+      [Name in keyof A]: Name extends string
+        ? _StoreOnActionListenerContext<Store<Id, S, G, A>, Name, A>
+        : never
+    }[keyof A]
 
-//   /**
-//    * Parameters passed to the action
-//    */
-//   args: A extends Record<ActionName, _Method>
-//     ? Parameters<A[ActionName]>
-//     : unknown[]
-
-//   /**
-//    * Sets up a hook once the action is finished. It receives the return value
-//    * of the action, if it's a Promise, it will be unwrapped.
-//    */
-//   after: (
-//     callback: A extends Record<ActionName, _Method>
-//       ? (resolvedReturn: _Awaited<ReturnType<A[ActionName]>>) => void
-//       : () => void
-//   ) => void
-
-//   /**
-//    * Sets up a hook if the action fails. Return `false` to catch the error and
-//    * stop it from propagating.
-//    */
-//   onError: (callback: (error: unknown) => void) => void
-// }
-
-// /**
-//  * Context object passed to callbacks of `store.$onAction(context => {})`
-//  * TODO: should have only the Id, the Store and Actions to generate the proper object
-//  */
-// export type StoreOnActionListenerContext<
-//   Id extends string,
-//   S extends StateTree,
-//   G /* extends GettersTree<S> */,
-//   A /* extends ActionsTree */
-// > = _ActionsTree extends A
-//   ? _StoreOnActionListenerContext<StoreGeneric, string, _ActionsTree>
-//   : {
-//       [Name in keyof A]: Name extends string
-//         ? _StoreOnActionListenerContext<Store<Id, S, G, A>, Name, A>
-//         : never
-//     }[keyof A]
-
-// /**
-//  * Argument of `store.$onAction()`
-//  */
-// export type StoreOnActionListener<
-//   Id extends string,
-//   S extends StateTree,
-//   G /* extends GettersTree<S> */,
-//   A /* extends ActionsTree */
-// > = (
-//   context: StoreOnActionListenerContext<
-//     Id,
-//     S,
-//     G,
-//     // {} creates a type of never due to how StoreOnActionListenerContext is defined
-//     {} extends A ? _ActionsTree : A
-//   >
-// ) => void
+/**
+ * Argument of `store.$onAction()`
+ */
+export type StoreOnActionListener<
+  Id extends string,
+  S extends StateTree,
+  G /* extends GettersTree<S> */,
+  A /* extends ActionsTree */
+> = (
+  context: StoreOnActionListenerContext<
+    Id,
+    S,
+    G,
+    // {} creates a type of never due to how StoreOnActionListenerContext is defined
+    {} extends A ? _ActionsTree : A
+  >
+) => void
 
 /**
  * Properties of a store.
  */
 export interface StoreProperties<Id extends string> {
-  //   /**
-  //    * Unique identifier of the store
-  //    */
-  //   $id: Id
-  //   /**
-  //    * Private property defining the dinia the store is attached to.
-  //    *
-  //    * @internal
-  //    */
-  //   _p: Dinia
+  /**
+   * Unique identifier of the store
+   */
+  $id: Id
+  /**
+   * Private property defining the dinia the store is attached to.
+   *
+   * @internal
+   */
+  _p: Dinia
   //   /**
   //    * Used by devtools plugin to retrieve getters. Removed in production.
   //    *
@@ -313,96 +309,96 @@ export interface _StoreWithState<
   G /* extends GettersTree<StateTree> */,
   A /* extends ActionsTree */
 > extends StoreProperties<Id> {
+  /**
+   * State of the Store. Setting it will internally call `$patch()` to update the state.
+   */
+  $state: UnwrapRef<S> & DiniaCustomStateProperties<S>
+  /**
+   * Applies a state patch to current state. Allows passing nested values
+   *
+   * @param partialState - patch to apply to the state
+   */
+  $patch(partialState: _DeepPartial<UnwrapRef<S>>): void
+  /**
+   * Group multiple changes into one function. Useful when mutating objects like
+   * Sets or arrays and applying an object patch isn't practical, e.g. appending
+   * to an array. The function passed to `$patch()` **must be synchronous**.
+   *
+   * @param stateMutator - function that mutates `state`, cannot be asynchronous
+   */
+  $patch<F extends (state: UnwrapRef<S>) => any>(
+    // this prevents the user from using `async` which isn't allowed
+    stateMutator: ReturnType<F> extends Promise<any> ? never : F
+  ): void
+  /**
+   * Resets the store to its initial state by building a new state object.
+   */
+  $reset(): void
+  /**
+   * Setups a callback to be called whenever the state changes. It also returns a function to remove the callback. Note
+   * that when calling `store.$subscribe()` inside of a component, it will be automatically cleaned up when the
+   * component gets unmounted unless `detached` is set to true.
+   *
+   * @param callback - callback passed to the watcher
+   * @param options - `watch` options + `detached` to detach the subscription from the context (usually a component)
+   * this is called from. Note that the `flush` option does not affect calls to `store.$patch()`.
+   * @returns function that removes the watcher
+   */
+  $subscribe(
+    callback: SubscriptionCallback<S>,
+    options?: { detached?: boolean } & WatchOptions
+  ): () => void
+  /**
+   * Setups a callback to be called every time an action is about to get
+   * invoked. The callback receives an object with all the relevant information
+   * of the invoked action:
+   * - `store`: the store it is invoked on
+   * - `name`: The name of the action
+   * - `args`: The parameters passed to the action
+   *
+   * On top of these, it receives two functions that allow setting up a callback
+   * once the action finishes or when it fails.
+   *
+   * It also returns a function to remove the callback. Note than when calling
+   * `store.$onAction()` inside of a component, it will be automatically cleaned
+   * up when the component gets unmounted unless `detached` is set to true.
+   *
+   * @example
+   *
+   *```js
+   *store.$onAction(({ after, onError }) => {
+   *  // Here you could share variables between all of the hooks as well as
+   *  // setting up watchers and clean them up
+   *  after((resolvedValue) => {
+   *    // can be used to cleanup side effects
+   * .  // `resolvedValue` is the value returned by the action, if it's a
+   * .  // Promise, it will be the resolved value instead of the Promise
+   *  })
+   *  onError((error) => {
+   *    // can be used to pass up errors
+   *  })
+   *})
+   *```
+   *
+   * @param callback - callback called before every action
+   * @param detached - detach the subscription from the context this is called from
+   * @returns function that removes the watcher
+   */
+  $onAction(
+    callback: StoreOnActionListener<Id, S, G, A>,
+    detached?: boolean
+  ): () => void
+  /**
+   * Stops the associated effect scope of the store and remove it from the store
+   * registry. Plugins can override this method to cleanup any added effects.
+   * e.g. devtools plugin stops displaying disposed stores from devtools.
+   * Note this doesn't delete the state of the store, you have to do it manually with
+   * `delete dinia.state.value[store.$id]` if you want to. If you don't and the
+   * store is used again, it will reuse the previous state.
+   */
+  $dispose(): void
   //   /**
-  //    * State of the Store. Setting it will internally call `$patch()` to update the state.
-  //    */
-  //   $state: UnwrapRef<S> & DiniaCustomStateProperties<S>
-  //   /**
-  //    * Applies a state patch to current state. Allows passing nested values
-  //    *
-  //    * @param partialState - patch to apply to the state
-  //    */
-  //   $patch(partialState: _DeepPartial<UnwrapRef<S>>): void
-  //   /**
-  //    * Group multiple changes into one function. Useful when mutating objects like
-  //    * Sets or arrays and applying an object patch isn't practical, e.g. appending
-  //    * to an array. The function passed to `$patch()` **must be synchronous**.
-  //    *
-  //    * @param stateMutator - function that mutates `state`, cannot be asynchronous
-  //    */
-  //   $patch<F extends (state: UnwrapRef<S>) => any>(
-  //     // this prevents the user from using `async` which isn't allowed
-  //     stateMutator: ReturnType<F> extends Promise<any> ? never : F
-  //   ): void
-  //   /**
-  //    * Resets the store to its initial state by building a new state object.
-  //    */
-  //   $reset(): void
-  //   /**
-  //    * Setups a callback to be called whenever the state changes. It also returns a function to remove the callback. Note
-  //    * that when calling `store.$subscribe()` inside of a component, it will be automatically cleaned up when the
-  //    * component gets unmounted unless `detached` is set to true.
-  //    *
-  //    * @param callback - callback passed to the watcher
-  //    * @param options - `watch` options + `detached` to detach the subscription from the context (usually a component)
-  //    * this is called from. Note that the `flush` option does not affect calls to `store.$patch()`.
-  //    * @returns function that removes the watcher
-  //    */
-  //   $subscribe(
-  //     callback: SubscriptionCallback<S>,
-  //     options?: { detached?: boolean } & WatchOptions
-  //   ): () => void
-  //   /**
-  //    * Setups a callback to be called every time an action is about to get
-  //    * invoked. The callback receives an object with all the relevant information
-  //    * of the invoked action:
-  //    * - `store`: the store it is invoked on
-  //    * - `name`: The name of the action
-  //    * - `args`: The parameters passed to the action
-  //    *
-  //    * On top of these, it receives two functions that allow setting up a callback
-  //    * once the action finishes or when it fails.
-  //    *
-  //    * It also returns a function to remove the callback. Note than when calling
-  //    * `store.$onAction()` inside of a component, it will be automatically cleaned
-  //    * up when the component gets unmounted unless `detached` is set to true.
-  //    *
-  //    * @example
-  //    *
-  //    *```js
-  //    *store.$onAction(({ after, onError }) => {
-  //    *  // Here you could share variables between all of the hooks as well as
-  //    *  // setting up watchers and clean them up
-  //    *  after((resolvedValue) => {
-  //    *    // can be used to cleanup side effects
-  //    * .  // `resolvedValue` is the value returned by the action, if it's a
-  //    * .  // Promise, it will be the resolved value instead of the Promise
-  //    *  })
-  //    *  onError((error) => {
-  //    *    // can be used to pass up errors
-  //    *  })
-  //    *})
-  //    *```
-  //    *
-  //    * @param callback - callback called before every action
-  //    * @param detached - detach the subscription from the context this is called from
-  //    * @returns function that removes the watcher
-  //    */
-  //   $onAction(
-  //     callback: StoreOnActionListener<Id, S, G, A>,
-  //     detached?: boolean
-  //   ): () => void
-  //   /**
-  //    * Stops the associated effect scope of the store and remove it from the store
-  //    * registry. Plugins can override this method to cleanup any added effects.
-  //    * e.g. devtools plugin stops displaying disposed stores from devtools.
-  //    * Note this doesn't delete the state of the store, you have to do it manually with
-  //    * `delete dinia.state.value[store.$id]` if you want to. If you don't and the
-  //    * store is used again, it will reuse the previous state.
-  //    */
-  //   $dispose(): void
-  //   /**
-  //    * Vue 2 only. Is the store ready. Used for store cross usage. Getters automatically compute when they are added to
+  //    * Docue 2 only. Is the store ready. Used for store cross usage. Getters automatically compute when they are added to
   //    * the store, before the store is actually ready, this allows to avoid calling the computed function yet.
   //    *
   //    * @internal
@@ -481,23 +477,23 @@ export interface StoreDefinition<
   G /* extends GettersTree<S>*/ = _GettersTree<S>,
   A /* extends ActionsTree */ = _ActionsTree
 > {
-  //   /**
-  //    * Returns a store, creates it if necessary.
-  //    *
-  //    * @param dinia - Dinia instance to retrieve the store
-  //    * @param hot - dev only hot module replacement
-  //    */
-  //   (dinia?: Dinia | null | undefined, hot?: StoreGeneric): Store<Id, S, G, A>
-  //   /**
-  //    * Id of the store. Used by map helpers.
-  //    */
-  //   $id: Id
-  //   /**
-  //    * Dev only dinia for HMR.
-  //    *
-  //    * @internal
-  //    */
-  //   _dinia?: Dinia
+  /**
+   * Returns a store, creates it if necessary.
+   *
+   * @param dinia - Dinia instance to retrieve the store
+   * @param hot - dev only hot module replacement
+   */
+  (dinia?: Dinia | null | undefined, hot?: StoreGeneric): Store<Id, S, G, A>
+  /**
+   * Id of the store. Used by map helpers.
+   */
+  $id: Id
+  /**
+   * Dev only dinia for HMR.
+   *
+   * @internal
+   */
+  _dinia?: Dinia
 }
 
 /**
@@ -605,32 +601,32 @@ export interface DefineStoreOptions<
   G /* extends GettersTree<S> */,
   A /* extends Record<string, StoreAction> */
 > extends DefineStoreOptionsBase<S, Store<Id, S, G, A>> {
-  //   /**
-  //    * Unique string key to identify the store across the application.
-  //    */
-  //   id: Id
-  //   /**
-  //    * Function to create a fresh state. **Must be an arrow function** to ensure
-  //    * correct typings!
-  //    */
-  //   state?: () => S
-  //   /**
-  //    * Optional object of getters.
-  //    */
-  //   getters?: G &
-  //     ThisType<UnwrapRef<S> & _StoreWithGetters<G> & DiniaCustomProperties> &
-  //     _GettersTree<S>
-  //   /**
-  //    * Optional object of actions.
-  //    */
-  //   actions?: A &
-  //     ThisType<
-  //       A &
-  //         UnwrapRef<S> &
-  //         _StoreWithState<Id, S, G, A> &
-  //         _StoreWithGetters<G> &
-  //         DiniaCustomProperties
-  //     >
+  /**
+   * Unique string key to identify the store across the application.
+   */
+  id: Id
+  /**
+   * Function to create a fresh state. **Must be an arrow function** to ensure
+   * correct typings!
+   */
+  state?: () => S
+  /**
+   * Optional object of getters.
+   */
+  getters?: G &
+    ThisType<UnwrapRef<S> & _StoreWithGetters<G> & DiniaCustomProperties> &
+    _GettersTree<S>
+  /**
+   * Optional object of actions.
+   */
+  actions?: A &
+    ThisType<
+      A &
+        UnwrapRef<S> &
+        _StoreWithState<Id, S, G, A> &
+        _StoreWithGetters<G> &
+        DiniaCustomProperties
+    >
   //   /**
   //    * Allows hydrating the store during SSR when complex state (like client side only refs) are used in the store
   //    * definition and copying the value from `dinia.state` isn't enough.

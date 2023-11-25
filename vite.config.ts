@@ -36,7 +36,7 @@ export default defineConfig({
         '**/src/devtools',
         '**/src/hmr.ts',
         '**/src/deprecated.ts',
-        '**/src/vue2-plugin.ts',
+        '**/src/docue2-plugin.ts',
       ],
     },
     setupFiles: ['packages/dinia/__tests__/vitest-setup.ts'],

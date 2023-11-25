@@ -94,9 +94,7 @@ function createConfig(buildName, output, plugins = []) {
   output.banner = banner
   output.externalLiveBindings = false
   output.globals = {
-    'vue-demi': 'VueDemi',
-    vue: 'Vue',
-    '@vue/composition-api': 'vueCompositionApi',
+    docuejs: 'Docue',
   }
 
   const isProductionBuild = /\.prod\.[cm]?js$/.test(output.file)
@@ -127,13 +125,13 @@ function createConfig(buildName, output, plugins = []) {
   // during a single build.
   hasTSChecked = true
 
-  const external = ['vue-demi', 'vue', '@vue/composition-api']
+  const external = ['docuejs']
   if (
     !isGlobalBuild &&
-    // dinia.prod.cjs should not require `@vue/devtools-api` (like Vue)
+    // dinia.prod.cjs should not require `@docue/devtools-api` (like Docue)
     !(isProductionBuild && isNodeBuild)
   ) {
-    external.push('@vue/devtools-api')
+    external.push('@docue/devtools-api')
   }
 
   const nodePlugins = [nodeResolve(), commonjs()]
@@ -179,7 +177,7 @@ function createReplacePlugin(
       : // hard coded dev/prod builds
         JSON.stringify(!isProduction)
   const __FEATURE_PROD_DEVTOOLS__ = isBundlerESMBuild
-    ? `(typeof __VUE_PROD_DEVTOOLS__ !== 'undefined' && __VUE_PROD_DEVTOOLS__)`
+    ? `(typeof __DOCUE_PROD_DEVTOOLS__ !== 'undefined' && __DOCUE_PROD_DEVTOOLS__)`
     : 'false'
 
   const __TEST__ =

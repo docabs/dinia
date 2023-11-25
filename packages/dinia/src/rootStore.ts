@@ -1,16 +1,16 @@
-// import {
-//   App,
-//   EffectScope,
-//   inject,
-//   hasInjectionContext,
-//   InjectionKey,
-//   Ref,
-// } from 'vue-demi'
+import {
+  App,
+  EffectScope,
+  inject,
+  hasInjectionContext,
+  InjectionKey,
+  Ref,
+} from 'docuejs'
 import {
   StateTree,
   DiniaCustomProperties,
-  //   _Method,
-  //   Store,
+  _Method,
+  Store,
   _GettersTree,
   _ActionsTree,
   DiniaCustomStateProperties,
@@ -39,21 +39,21 @@ interface _SetActiveDinia {
   (dinia: Dinia | undefined): Dinia | undefined
 }
 
-// /**
-//  * Get the currently active dinia if there is any.
-//  */
-// export const getActiveDinia = () =>
-//   (hasInjectionContext() && inject(doniaSymbol)) || activeDinia
+/**
+ * Get the currently active dinia if there is any.
+ */
+export const getActiveDinia = () =>
+  (hasInjectionContext() && inject(diniaSymbol)) || activeDinia
 
 /**
  * Every application must own its own dinia to be able to create stores
  */
 export interface Dinia {
   //   install: (app: App) => void
-  //   /**
-  //    * root state
-  //    */
-  //   state: Ref<Record<string, StateTree>>
+  /**
+   * root state
+   */
+  state: Ref<Record<string, StateTree>>
   //   /**
   //    * Adds a store plugin to extend every store
   //    *
@@ -66,18 +66,18 @@ export interface Dinia {
   //    * @internal
   //    */
   //   _p: DiniaPlugin[]
-  //   /**
-  //    * App linked to this Dinia instance
-  //    *
-  //    * @internal
-  //    */
-  //   _a: App
-  //   /**
-  //    * Effect scope the dinia is attached to
-  //    *
-  //    * @internal
-  //    */
-  //   _e: EffectScope
+  /**
+   * App linked to this Dinia instance
+   *
+   * @internal
+   */
+  _a: App
+  /**
+   * Effect scope the dinia is attached to
+   *
+   * @internal
+   */
+  _e: EffectScope
   /**
    * Registry of stores used by this dinia.
    *
@@ -92,7 +92,7 @@ export interface Dinia {
   _testing?: boolean
 }
 
-export const doniaSymbol = (
+export const diniaSymbol = (
   __DEV__ ? Symbol('dinia') : /* istanbul ignore next */ Symbol()
 ) as InjectionKey<Dinia>
 
@@ -110,7 +110,7 @@ export interface DiniaPluginContext<
   //    */
   //   dinia: Dinia
   //   /**
-  //    * Current app created with `Vue.createApp()`.
+  //    * Current app created with `Docue.createApp()`.
   //    */
   //   app: App
   //   /**

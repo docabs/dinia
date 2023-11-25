@@ -276,7 +276,7 @@ function updateDeps(pkg, depType, updatedPackages) {
   step(`Updating ${chalk.bold(depType)} for ${chalk.bold.white(pkg.name)}...`)
   Object.keys(deps).forEach((dep) => {
     const updatedDep = updatedPackages.find((pkg) => pkg.name === dep)
-    // avoid updated peer deps that are external like @vue/devtools-api
+    // avoid updated peer deps that are external like @docuejs/devtools-api
     if (dep && updatedDep) {
       console.log(
         chalk.yellow(

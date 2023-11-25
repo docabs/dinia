@@ -29,8 +29,8 @@
     "@types/lodash.kebabcase": "^4.1.8",
     "@types/node": "^20.8.10",
     "@vitest/coverage-v8": "^0.34.6",
-    "@vue/compiler-sfc": "^3.3.7",
-    "@vue/server-renderer": "^3.3.7",
+    "@docue/compiler-sfc": "^0.0.2",
+    "@docue/server-renderer": "^0.0.2",
     "chalk": "^5.3.0",
     "conventional-changelog-cli": "^2.2.2",
     "enquirer": "^2.4.1",
@@ -51,7 +51,7 @@
     "typedoc-plugin-markdown": "^3.17.0",
     "typescript": "^5.2.2",
     "vitest": "^0.34.6",
-    "vue": "^3.3.7",
+    "docuejs": "^0.0.2",
     "yorkie": "^2.0.0"
   },
   "gitHooks": {

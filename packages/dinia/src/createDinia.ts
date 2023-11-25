@@ -1,19 +1,19 @@
-import { Dinia, DiniaPlugin, setActiveDinia, doniaSymbol } from './rootStore'
-// import { ref, App, markRaw, effectScope, isVue2, Ref } from 'vue-demi'
+import { Dinia, DiniaPlugin, setActiveDinia, diniaSymbol } from './rootStore'
+import { ref, App, markRaw, effectScope, isDocue2, Ref } from 'docuejs'
 // import { registerDiniaDevtools, devtoolsPlugin } from './devtools'
 // import { IS_CLIENT } from './env'
-// import { StateTree, StoreGeneric } from './types'
+import { StateTree, StoreGeneric } from './types'
 
 /**
  * Creates a Dinia instance to be used by the application
  */
 export function createDinia(): Dinia {
-  //   const scope = effectScope(true)
-  //   // NOTE: here we could check the window object for a state and directly set it
-  //   // if there is anything like it with Vue 3 SSR
-  //   const state = scope.run<Ref<Record<string, StateTree>>>(() =>
-  //     ref<Record<string, StateTree>>({})
-  //   )!
+  const scope = effectScope(true)
+  // NOTE: here we could check the window object for a state and directly set it
+  // if there is anything like it with Docue 3 SSR
+  const state = scope.run<Ref<Record<string, StateTree>>>(() =>
+    ref<Record<string, StateTree>>({})
+  )!
 
   //   let _p: Dinia['_p'] = []
   //   // plugins added before calling app.use(dinia)
@@ -24,9 +24,9 @@ export function createDinia(): Dinia {
     //       // this allows calling useStore() outside of a component setup after
     //       // installing dinia's plugin
     //       setActiveDinia(dinia)
-    //       if (!isVue2) {
+    //       if (!isDocue2) {
     //         dinia._a = app
-    //         app.provide(doniaSymbol, dinia)
+    //         app.provide(diniaSymbol, dinia)
     //         app.config.globalProperties.$dinia = dinia
     //         /* istanbul ignore else */
     //         if (__USE_DEVTOOLS__ && IS_CLIENT) {
@@ -37,7 +37,7 @@ export function createDinia(): Dinia {
     //       }
     //     },
     //     use(plugin) {
-    //       if (!this._a && !isVue2) {
+    //       if (!this._a && !isDocue2) {
     //         toBeInstalled.push(plugin)
     //       } else {
     //         _p.push(plugin)
@@ -48,13 +48,13 @@ export function createDinia(): Dinia {
     //     // it's actually undefined here
     //     // @ts-expect-error
     //     _a: null,
-    //     _e: scope,
-    //     _s: new Map<string, StoreGeneric>(),
-    //     state,
+    _e: scope,
+    _s: new Map<string, StoreGeneric>(),
+    state,
   })
 
   //   // dinia devtools rely on dev only features so they cannot be forced unless
-  //   // the dev build of Vue is used. Avoid old browsers like IE11.
+  //   // the dev build of Docue is used. Avoid old browsers like IE11.
   //   if (__USE_DEVTOOLS__ && typeof Proxy !== 'undefined') {
   //     dinia.use(devtoolsPlugin)
   //   }
