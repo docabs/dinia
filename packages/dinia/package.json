@@ -1,6 +1,6 @@
 {
   "name": "dinia",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "",
   "main": "index.js",
   "module": "dist/dinia.mjs",
@@ -35,7 +35,32 @@
     "test:dts": "tsc -p ./test-dts/tsconfig.json",
     "test": "yarn run build && yarn run build:dts && yarn test:dts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "files": [
+    "dist/*.js",
+    "dist/*.mjs",
+    "dist/*.cjs",
+    "dist/dinia.d.ts",
+    "index.js",
+    "index.cjs",
+    "LICENSE",
+    "README.md"
+  ],
+  "devDependencies": {
+    "@microsoft/api-extractor": "7.34.4",
+    "@docue/test-utils": "^0.0.2"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "typescript": ">=4.4.4",
+    "docuejs": "^0.0.2"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  },
+  "keywords": [
+    "docue",
+    "dinia"
+  ]
 }

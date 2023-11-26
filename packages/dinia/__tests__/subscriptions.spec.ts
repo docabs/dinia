@@ -1,6 +1,6 @@
 import { beforeEach, describe, it, expect, vi } from 'vitest'
 import { createDinia, defineStore, MutationType, setActiveDinia } from '../src'
-// import { mount } from '@docue/test-utils'
+import { mount } from '@docue/test-utils'
 import { nextTick } from 'docuejs'
 
 describe('Subscriptions', () => {
@@ -48,47 +48,47 @@ describe('Subscriptions', () => {
       store.$state
     )
   })
-  // const flushOptions = ['post', 'pre', 'sync'] as const
+  const flushOptions = ['post', 'pre', 'sync'] as const
 
-  // flushOptions.forEach((flush) => {
-  //   it('calls once inside components with flush ' + flush, async () => {
-  //     const pinia = createDinia()
-  //     setActiveDinia(pinia)
-  //     const spy1 = vi.fn()
+  flushOptions.forEach((flush) => {
+    it('calls once inside components with flush ' + flush, async () => {
+      const pinia = createDinia()
+      setActiveDinia(pinia)
+      const spy1 = vi.fn()
 
-  //     mount(
-  //       {
-  //         setup() {
-  //           const s1 = useStore()
-  //           s1.$subscribe(spy1, { flush })
-  //         },
-  //         template: `<p/>`,
-  //       },
-  //       { global: { plugins: [pinia] } }
-  //     )
+      mount(
+        {
+          setup() {
+            const s1 = useStore()
+            s1.$subscribe(spy1, { flush })
+          },
+          template: `<p/>`,
+        },
+        { global: { plugins: [pinia] } }
+      )
 
-  //     const s1 = useStore()
+      const s1 = useStore()
 
-  //     expect(spy1).toHaveBeenCalledTimes(0)
+      expect(spy1).toHaveBeenCalledTimes(0)
 
-  //     s1.user = 'Edu'
-  //     await nextTick()
-  //     await nextTick()
-  //     expect(spy1).toHaveBeenCalledTimes(1)
+      s1.user = 'Edu'
+      await nextTick()
+      await nextTick()
+      expect(spy1).toHaveBeenCalledTimes(1)
 
-  //     s1.$patch({ user: 'a' })
-  //     await nextTick()
-  //     await nextTick()
-  //     expect(spy1).toHaveBeenCalledTimes(2)
+      s1.$patch({ user: 'a' })
+      await nextTick()
+      await nextTick()
+      expect(spy1).toHaveBeenCalledTimes(2)
 
-  //     s1.$patch((state) => {
-  //       state.user = 'other'
-  //     })
-  //     await nextTick()
-  //     await nextTick()
-  //     expect(spy1).toHaveBeenCalledTimes(3)
-  //   })
-  // })
+      s1.$patch((state) => {
+        state.user = 'other'
+      })
+      await nextTick()
+      await nextTick()
+      expect(spy1).toHaveBeenCalledTimes(3)
+    })
+  })
 
   it('works with multiple different flush', async () => {
     const spyPre = vi.fn()
@@ -233,60 +233,60 @@ describe('Subscriptions', () => {
       )
     })
 
-    // it('removes on unmount', async () => {
-    //   const pinia = createDinia()
-    //   setActiveDinia(pinia)
-    //   const spy1 = vi.fn()
-    //   const spy2 = vi.fn()
+    it('removes on unmount', async () => {
+      const pinia = createDinia()
+      setActiveDinia(pinia)
+      const spy1 = vi.fn()
+      const spy2 = vi.fn()
 
-    //   const wrapper = mount(
-    //     {
-    //       setup() {
-    //         const s1 = useStore()
-    //         s1.$subscribe(spy1, { flush: 'sync' })
-    //       },
-    //       template: `<p/>`,
-    //     },
-    //     { global: { plugins: [pinia] } }
-    //   )
+      const wrapper = mount(
+        {
+          setup() {
+            const s1 = useStore()
+            s1.$subscribe(spy1, { flush: 'sync' })
+          },
+          template: `<p/>`,
+        },
+        { global: { plugins: [pinia] } }
+      )
 
-    //   const s1 = useStore()
-    //   const s2 = useStore()
+      const s1 = useStore()
+      const s2 = useStore()
 
-    //   s2.$subscribe(spy2, { flush: 'sync' })
+      s2.$subscribe(spy2, { flush: 'sync' })
 
-    //   expect(spy1).toHaveBeenCalledTimes(0)
-    //   expect(spy2).toHaveBeenCalledTimes(0)
+      expect(spy1).toHaveBeenCalledTimes(0)
+      expect(spy2).toHaveBeenCalledTimes(0)
 
-    //   s1.user = 'Edu'
-    //   expect(spy1).toHaveBeenCalledTimes(1)
-    //   expect(spy2).toHaveBeenCalledTimes(1)
+      s1.user = 'Edu'
+      expect(spy1).toHaveBeenCalledTimes(1)
+      expect(spy2).toHaveBeenCalledTimes(1)
 
-    //   s1.$patch({ user: 'a' })
-    //   expect(spy1).toHaveBeenCalledTimes(2)
-    //   expect(spy2).toHaveBeenCalledTimes(2)
+      s1.$patch({ user: 'a' })
+      expect(spy1).toHaveBeenCalledTimes(2)
+      expect(spy2).toHaveBeenCalledTimes(2)
 
-    //   s1.$patch((state) => {
-    //     state.user = 'other'
-    //   })
-    //   expect(spy1).toHaveBeenCalledTimes(3)
-    //   expect(spy2).toHaveBeenCalledTimes(3)
+      s1.$patch((state) => {
+        state.user = 'other'
+      })
+      expect(spy1).toHaveBeenCalledTimes(3)
+      expect(spy2).toHaveBeenCalledTimes(3)
 
-    //   wrapper.unmount()
-    //   await nextTick()
+      wrapper.unmount()
+      await nextTick()
 
-    //   s1.$patch({ user: 'b' })
-    //   expect(spy1).toHaveBeenCalledTimes(3)
-    //   expect(spy2).toHaveBeenCalledTimes(4)
-    //   s1.$patch((state) => {
-    //     state.user = 'c'
-    //   })
-    //   expect(spy1).toHaveBeenCalledTimes(3)
-    //   expect(spy2).toHaveBeenCalledTimes(5)
-    //   s1.user = 'd'
-    //   expect(spy1).toHaveBeenCalledTimes(3)
-    //   expect(spy2).toHaveBeenCalledTimes(6)
-    // })
+      s1.$patch({ user: 'b' })
+      expect(spy1).toHaveBeenCalledTimes(3)
+      expect(spy2).toHaveBeenCalledTimes(4)
+      s1.$patch((state) => {
+        state.user = 'c'
+      })
+      expect(spy1).toHaveBeenCalledTimes(3)
+      expect(spy2).toHaveBeenCalledTimes(5)
+      s1.user = 'd'
+      expect(spy1).toHaveBeenCalledTimes(3)
+      expect(spy2).toHaveBeenCalledTimes(6)
+    })
   })
 
   it('subscribe is post by default', async () => {

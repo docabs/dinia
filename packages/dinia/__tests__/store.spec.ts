@@ -1,6 +1,6 @@
 import { beforeEach, describe, it, expect, vi } from 'vitest'
 import { createDinia, defineStore, setActiveDinia } from '../src'
-// import { mount } from '@docue/test-utils'
+import { mount } from '@docue/test-utils'
 import { defineComponent, getCurrentInstance, nextTick, watch } from 'docuejs'
 import { mockWarn } from './vitest-mock-warn'
 
@@ -53,30 +53,30 @@ describe('Store', () => {
     })
   })
 
-  //   it('works without setting the active dinia', async () => {
-  //     setActiveDinia(undefined)
-  //     const dinia = createDinia()
-  //     const useStore = defineStore({
-  //       id: 'main',
-  //       state: () => ({ n: 0 }),
-  //     })
-  //     const TestComponent = defineComponent({
-  //       template: `<div>{{ store. n }}</div>`,
-  //       setup() {
-  //         const store = useStore()
-  //         return { store }
-  //       },
-  //     })
-  //     const w1 = mount(TestComponent, { global: { plugins: [dinia] } })
-  //     const w2 = mount(TestComponent, { global: { plugins: [dinia] } })
-  //     expect(w1.text()).toBe('0')
-  //     expect(w2.text()).toBe('0')
+  it('works without setting the active dinia', async () => {
+    setActiveDinia(undefined)
+    const dinia = createDinia()
+    const useStore = defineStore({
+      id: 'main',
+      state: () => ({ n: 0 }),
+    })
+    const TestComponent = defineComponent({
+      template: `<div>{{ store. n }}</div>`,
+      setup() {
+        const store = useStore()
+        return { store }
+      },
+    })
+    const w1 = mount(TestComponent, { global: { plugins: [dinia] } })
+    const w2 = mount(TestComponent, { global: { plugins: [dinia] } })
+    expect(w1.text()).toBe('0')
+    expect(w2.text()).toBe('0')
 
-  //     w1.vm.store.n++
-  //     await w1.vm.$nextTick()
-  //     expect(w1.text()).toBe('1')
-  //     expect(w2.text()).toBe('1')
-  //   })
+    w1.vm.store.n++
+    await w1.vm.$nextTick()
+    expect(w1.text()).toBe('1')
+    expect(w2.text()).toBe('1')
+  })
 
   it('can be reset', () => {
     const store = useStore()
@@ -175,142 +175,142 @@ describe('Store', () => {
     expect(store2.$state.nested.a.b).toBe('string')
   })
 
-  //   it('should outlive components', async () => {
-  //     const dinia = createDinia()
-  //     const useStore = defineStore({
-  //       id: 'main',
-  //       state: () => ({ n: 0 }),
-  //     })
+  it('should outlive components', async () => {
+    const dinia = createDinia()
+    const useStore = defineStore({
+      id: 'main',
+      state: () => ({ n: 0 }),
+    })
 
-  //     const wrapper = mount(
-  //       {
-  //         setup() {
-  //           const store = useStore()
+    const wrapper = mount(
+      {
+        setup() {
+          const store = useStore()
 
-  //           return { store }
-  //         },
+          return { store }
+        },
 
-  //         template: `n: {{ store.n }}`,
-  //       },
-  //       {
-  //         global: {
-  //           plugins: [dinia],
-  //         },
-  //       }
-  //     )
+        template: `n: {{ store.n }}`,
+      },
+      {
+        global: {
+          plugins: [dinia],
+        },
+      }
+    )
 
-  //     expect(wrapper.html()).toBe('n: 0')
+    expect(wrapper.html()).toBe('n: 0')
 
-  //     const store = useStore(dinia)
+    const store = useStore(dinia)
 
-  //     const spy = vi.fn()
-  //     watch(() => store.n, spy)
+    const spy = vi.fn()
+    watch(() => store.n, spy)
 
-  //     expect(spy).toHaveBeenCalledTimes(0)
-  //     store.n++
-  //     await nextTick()
-  //     expect(spy).toHaveBeenCalledTimes(1)
-  //     expect(wrapper.html()).toBe('n: 1')
+    expect(spy).toHaveBeenCalledTimes(0)
+    store.n++
+    await nextTick()
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(wrapper.html()).toBe('n: 1')
 
-  //     wrapper.unmount()
-  //     await nextTick()
-  //     store.n++
-  //     await nextTick()
-  //     expect(spy).toHaveBeenCalledTimes(2)
-  //   })
+    wrapper.unmount()
+    await nextTick()
+    store.n++
+    await nextTick()
+    expect(spy).toHaveBeenCalledTimes(2)
+  })
 
-  //   it('should not break getCurrentInstance', () => {
-  //     let store: ReturnType<typeof useStore> | undefined
+  it('should not break getCurrentInstance', () => {
+    let store: ReturnType<typeof useStore> | undefined
 
-  //     let i1: any = {}
-  //     let i2: any = {}
-  //     const wrapper = mount(
-  //       {
-  //         setup() {
-  //           i1 = getCurrentInstance()
-  //           store = useStore()
-  //           i2 = getCurrentInstance()
+    let i1: any = {}
+    let i2: any = {}
+    const wrapper = mount(
+      {
+        setup() {
+          i1 = getCurrentInstance()
+          store = useStore()
+          i2 = getCurrentInstance()
 
-  //           return { store }
-  //         },
+          return { store }
+        },
 
-  //         template: `a: {{ store.a }}`,
-  //       },
-  //       {
-  //         global: {
-  //           plugins: [createDinia()],
-  //         },
-  //       }
-  //     )
+        template: `a: {{ store.a }}`,
+      },
+      {
+        global: {
+          plugins: [createDinia()],
+        },
+      }
+    )
 
-  //     expect(i1 === i2).toBe(true)
+    expect(i1 === i2).toBe(true)
 
-  //     wrapper.unmount()
-  //   })
+    wrapper.unmount()
+  })
 
-  //   it('reuses stores from parent components', () => {
-  //     let s1, s2
-  //     const useStore = defineStore({ id: 'one' })
-  //     const dinia = createDinia()
+  it('reuses stores from parent components', () => {
+    let s1, s2
+    const useStore = defineStore({ id: 'one' })
+    const dinia = createDinia()
 
-  //     const Child = defineComponent({
-  //       setup() {
-  //         s2 = useStore()
-  //       },
-  //       template: `child`,
-  //     })
+    const Child = defineComponent({
+      setup() {
+        s2 = useStore()
+      },
+      template: `child`,
+    })
 
-  //     mount(
-  //       {
-  //         setup() {
-  //           s1 = useStore()
-  //           return { s1 }
-  //         },
-  //         components: { Child },
-  //         template: `<child/>`,
-  //       },
-  //       { global: { plugins: [dinia] } }
-  //     )
+    mount(
+      {
+        setup() {
+          s1 = useStore()
+          return { s1 }
+        },
+        components: { Child },
+        template: `<child/>`,
+      },
+      { global: { plugins: [dinia] } }
+    )
 
-  //     expect(s1).toBeDefined()
-  //     expect(s1 === s2).toBe(true)
-  //   })
+    expect(s1).toBeDefined()
+    expect(s1 === s2).toBe(true)
+  })
 
-  //   it('can share the same dinia in two completely different instances', async () => {
-  //     const useStore = defineStore({ id: 'one', state: () => ({ n: 0 }) })
-  //     const dinia = createDinia()
+  it('can share the same dinia in two completely different instances', async () => {
+    const useStore = defineStore({ id: 'one', state: () => ({ n: 0 }) })
+    const dinia = createDinia()
 
-  //     const Comp = defineComponent({
-  //       setup() {
-  //         const store = useStore()
-  //         return { store }
-  //       },
-  //       template: `{{ store.n }}`,
-  //     })
+    const Comp = defineComponent({
+      setup() {
+        const store = useStore()
+        return { store }
+      },
+      template: `{{ store.n }}`,
+    })
 
-  //     const One = mount(Comp, {
-  //       global: {
-  //         plugins: [dinia],
-  //       },
-  //     })
+    const One = mount(Comp, {
+      global: {
+        plugins: [dinia],
+      },
+    })
 
-  //     const Two = mount(Comp, {
-  //       global: {
-  //         plugins: [dinia],
-  //       },
-  //     })
+    const Two = mount(Comp, {
+      global: {
+        plugins: [dinia],
+      },
+    })
 
-  //     const store = useStore(dinia)
+    const store = useStore(dinia)
 
-  //     expect(One.text()).toBe('0')
-  //     expect(Two.text()).toBe('0')
+    expect(One.text()).toBe('0')
+    expect(Two.text()).toBe('0')
 
-  //     store.n++
-  //     await nextTick()
+    store.n++
+    await nextTick()
 
-  //     expect(One.text()).toBe('1')
-  //     expect(Two.text()).toBe('1')
-  //   })
+    expect(One.text()).toBe('1')
+    expect(Two.text()).toBe('1')
+  })
 
   it('can be disposed', () => {
     const dinia = createDinia()

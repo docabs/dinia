@@ -1,7 +1,7 @@
 import { beforeEach, describe, it, expect, vi } from 'vitest'
 import { createDinia, defineStore, setActiveDinia } from '../src'
 import { computed, createApp, inject, nextTick, ref, watch } from 'docuejs'
-// import { mount } from '@docue/test-utils'
+import { mount } from '@docue/test-utils'
 
 function expectType<T>(_value: T): void {}
 
@@ -148,38 +148,38 @@ describe('store with setup syntax', () => {
     expect(store.injected).toBe('dinia')
   })
 
-  // // TODO: until https://github.com/vuejs/test-utils/issues/2059 is fixed
-  // it.skip('injects level app injections even within components', async () => {
-  //   const dinia = createDinia()
-  //   const useStore = defineStore('id', () => {
-  //     const injected = ref(inject('hello', 'nope'))
+  // TODO: until https://github.com/vuejs/test-utils/issues/2059 is fixed
+  it.skip('injects level app injections even within components', async () => {
+    const dinia = createDinia()
+    const useStore = defineStore('id', () => {
+      const injected = ref(inject('hello', 'nope'))
 
-  //     return { injected }
-  //   })
+      return { injected }
+    })
 
-  //   const NestedComponent = {
-  //     template: '<div>{{ injected }}</div>',
-  //     setup() {
-  //       const store = useStore()
-  //       return { injected: store.injected }
-  //     },
-  //   }
-  //   const Component = {
-  //     template: '<NestedComponent />',
-  //     components: { NestedComponent },
-  //     setup() {
-  //       // provide('hello', 'component')
-  //       return {}
-  //     },
-  //   }
-  //   const wrapper = mount(Component, {
-  //     global: {
-  //       plugins: [dinia],
-  //       provide: {
-  //         hello: 'dinia',
-  //       },
-  //     },
-  //   })
-  //   expect(wrapper.text()).toBe('dinia')
-  // })
+    const NestedComponent = {
+      template: '<div>{{ injected }}</div>',
+      setup() {
+        const store = useStore()
+        return { injected: store.injected }
+      },
+    }
+    const Component = {
+      template: '<NestedComponent />',
+      components: { NestedComponent },
+      setup() {
+        // provide('hello', 'component')
+        return {}
+      },
+    }
+    const wrapper = mount(Component, {
+      global: {
+        plugins: [dinia],
+        provide: {
+          hello: 'dinia',
+        },
+      },
+    })
+    expect(wrapper.text()).toBe('dinia')
+  })
 })

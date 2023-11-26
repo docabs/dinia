@@ -68,5 +68,8 @@
   },
   "resolutions": {
     "@nuxt/kit": "^3.4.3"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
