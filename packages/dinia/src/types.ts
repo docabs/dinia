@@ -157,15 +157,15 @@ export type SubscriptionCallback<S> = (
   state: UnwrapRef<S>
 ) => void
 
-// // to support TS 4.4
-// // TODO: remove in 2.1.0, use Awaited, and up the peer dep to TS 4.5
-// export type _Awaited<T> = T extends null | undefined
-//   ? T // special case for `null | undefined` when not in `--strictNullChecks` mode
-//   : T extends object & { then(onfulfilled: infer F): any } // `await` only unwraps object types with a callable `then`. Non-object types are not unwrapped
-//   ? F extends (value: infer V, ...args: any) => any // if the argument to `then` is callable, extracts the first argument
-//     ? _Awaited<V> // recursively unwrap the value
-//     : never // the argument to `then` was not callable
-//   : T // non-object or non-thenable
+// to support TS 4.4
+// TODO: remove in 2.1.0, use Awaited, and up the peer dep to TS 4.5
+export type _Awaited<T> = T extends null | undefined
+  ? T // special case for `null | undefined` when not in `--strictNullChecks` mode
+  : T extends object & { then(onfulfilled: infer F): any } // `await` only unwraps object types with a callable `then`. Non-object types are not unwrapped
+  ? F extends (value: infer V, ...args: any) => any // if the argument to `then` is callable, extracts the first argument
+    ? _Awaited<V> // recursively unwrap the value
+    : never // the argument to `then` was not callable
+  : T // non-object or non-thenable
 
 /**
  * Actual type for {@link StoreOnActionListenerContext}. Exists for refactoring
@@ -191,20 +191,20 @@ export interface _StoreOnActionListenerContext<
   args: A extends Record<ActionName, _Method>
     ? Parameters<A[ActionName]>
     : unknown[]
-  //   /**
-  //    * Sets up a hook once the action is finished. It receives the return value
-  //    * of the action, if it's a Promise, it will be unwrapped.
-  //    */
-  //   after: (
-  //     callback: A extends Record<ActionName, _Method>
-  //       ? (resolvedReturn: _Awaited<ReturnType<A[ActionName]>>) => void
-  //       : () => void
-  //   ) => void
-  //   /**
-  //    * Sets up a hook if the action fails. Return `false` to catch the error and
-  //    * stop it from propagating.
-  //    */
-  //   onError: (callback: (error: unknown) => void) => void
+  /**
+   * Sets up a hook once the action is finished. It receives the return value
+   * of the action, if it's a Promise, it will be unwrapped.
+   */
+  after: (
+    callback: A extends Record<ActionName, _Method>
+      ? (resolvedReturn: _Awaited<ReturnType<A[ActionName]>>) => void
+      : () => void
+  ) => void
+  /**
+   * Sets up a hook if the action fails. Return `false` to catch the error and
+   * stop it from propagating.
+   */
+  onError: (callback: (error: unknown) => void) => void
 }
 
 /**

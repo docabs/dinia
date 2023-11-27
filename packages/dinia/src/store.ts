@@ -54,7 +54,7 @@ import { addSubscription, triggerSubscriptions, noop } from './subscriptions'
 
 const fallbackRunWithContext = (fn: () => unknown) => fn()
 
-// type _ArrayType<AT> = AT extends Array<infer T> ? T : never
+type _ArrayType<AT> = AT extends Array<infer T> ? T : never
 
 function mergeReactiveObjects<
   T extends Record<any, unknown> | Map<unknown, unknown> | Set<unknown>
@@ -349,62 +349,57 @@ function createSetupStore<
     dinia._s.delete($id)
   }
 
-  //   /**
-  //    * Wraps an action to handle subscriptions.
-  //    *
-  //    * @param name - name of the action
-  //    * @param action - action to wrap
-  //    * @returns a wrapped action to handle subscriptions
-  //    */
-  //   function wrapAction(name: string, action: _Method) {
-  //     return function (this: any) {
-  //       setActiveDinia(dinia)
-  //       const args = Array.from(arguments)
-
-  //       const afterCallbackList: Array<(resolvedReturn: any) => any> = []
-  //       const onErrorCallbackList: Array<(error: unknown) => unknown> = []
-  //       function after(callback: _ArrayType<typeof afterCallbackList>) {
-  //         afterCallbackList.push(callback)
-  //       }
-  //       function onError(callback: _ArrayType<typeof onErrorCallbackList>) {
-  //         onErrorCallbackList.push(callback)
-  //       }
-
-  //       // @ts-expect-error
-  //       triggerSubscriptions(actionSubscriptions, {
-  //         args,
-  //         name,
-  //         store,
-  //         after,
-  //         onError,
-  //       })
-
-  //       let ret: unknown
-  //       try {
-  //         ret = action.apply(this && this.$id === $id ? this : store, args)
-  //         // handle sync errors
-  //       } catch (error) {
-  //         triggerSubscriptions(onErrorCallbackList, error)
-  //         throw error
-  //       }
-
-  //       if (ret instanceof Promise) {
-  //         return ret
-  //           .then((value) => {
-  //             triggerSubscriptions(afterCallbackList, value)
-  //             return value
-  //           })
-  //           .catch((error) => {
-  //             triggerSubscriptions(onErrorCallbackList, error)
-  //             return Promise.reject(error)
-  //           })
-  //       }
-
-  //       // trigger after callbacks
-  //       triggerSubscriptions(afterCallbackList, ret)
-  //       return ret
-  //     }
-  //   }
+  /**
+   * Wraps an action to handle subscriptions.
+   *
+   * @param name - name of the action
+   * @param action - action to wrap
+   * @returns a wrapped action to handle subscriptions
+   */
+  function wrapAction(name: string, action: _Method) {
+    return function (this: any) {
+      setActiveDinia(dinia)
+      const args = Array.from(arguments)
+      const afterCallbackList: Array<(resolvedReturn: any) => any> = []
+      const onErrorCallbackList: Array<(error: unknown) => unknown> = []
+      function after(callback: _ArrayType<typeof afterCallbackList>) {
+        afterCallbackList.push(callback)
+      }
+      function onError(callback: _ArrayType<typeof onErrorCallbackList>) {
+        onErrorCallbackList.push(callback)
+      }
+      // @ts-expect-error
+      triggerSubscriptions(actionSubscriptions, {
+        args,
+        name,
+        store,
+        after,
+        onError,
+      })
+      let ret: unknown
+      try {
+        ret = action.apply(this && this.$id === $id ? this : store, args)
+        // handle sync errors
+      } catch (error) {
+        triggerSubscriptions(onErrorCallbackList, error)
+        throw error
+      }
+      if (ret instanceof Promise) {
+        return ret
+          .then((value) => {
+            triggerSubscriptions(afterCallbackList, value)
+            return value
+          })
+          .catch((error) => {
+            triggerSubscriptions(onErrorCallbackList, error)
+            return Promise.reject(error)
+          })
+      }
+      // trigger after callbacks
+      triggerSubscriptions(afterCallbackList, ret)
+      return ret
+    }
+  }
 
   const _hmrPayload = /*#__PURE__*/ markRaw({
     actions: {} as Record<string, any>,
@@ -511,27 +506,27 @@ function createSetupStore<
           dinia.state.value[$id][key] = prop
         }
       }
-      //       /* istanbul ignore else */
-      //       if (__DEV__) {
-      //         _hmrPayload.state.push(key)
-      //       }
+      /* istanbul ignore else */
+      if (__DEV__) {
+        //         _hmrPayload.state.push(key)
+      }
       //       // action
     } else if (typeof prop === 'function') {
-      //       // @ts-expect-error: we are overriding the function we avoid wrapping if
-      //       const actionValue = __DEV__ && hot ? prop : wrapAction(key, prop)
-      //       // this a hot module replacement store because the hotUpdate method needs
-      //       // to do it with the right context
-      //       /* istanbul ignore if */
-      //       if (isDocue2) {
-      //         set(setupStore, key, actionValue)
-      //       } else {
-      //         // @ts-expect-error
-      //         setupStore[key] = actionValue
-      //       }
-      //       /* istanbul ignore else */
-      //       if (__DEV__) {
-      //         _hmrPayload.actions[key] = prop
-      //       }
+      // @ts-expect-error: we are overriding the function we avoid wrapping if
+      const actionValue = __DEV__ && hot ? prop : wrapAction(key, prop)
+      // this a hot module replacement store because the hotUpdate method needs
+      // to do it with the right context
+      /* istanbul ignore if */
+      if (isDocue2) {
+        // set(setupStore, key, actionValue)
+      } else {
+        // @ts-expect-error
+        setupStore[key] = actionValue
+      }
+      /* istanbul ignore else */
+      if (__DEV__) {
+        //         _hmrPayload.actions[key] = prop
+      }
       //       // list actions so they can be used in plugins
       //       // @ts-expect-error
       //       optionsForPlugin.actions[key] = prop
@@ -582,87 +577,78 @@ function createSetupStore<
     },
   })
 
-  //   // add the hotUpdate before plugins to allow them to override it
-  //   /* istanbul ignore else */
-  //   if (__DEV__) {
-  //     store._hotUpdate = markRaw((newStore) => {
-  //       store._hotUpdating = true
-  //       newStore._hmrPayload.state.forEach((stateKey) => {
-  //         if (stateKey in store.$state) {
-  //           const newStateTarget = newStore.$state[stateKey]
-  //           const oldStateSource = store.$state[stateKey]
-  //           if (
-  //             typeof newStateTarget === 'object' &&
-  //             isPlainObject(newStateTarget) &&
-  //             isPlainObject(oldStateSource)
-  //           ) {
-  //             patchObject(newStateTarget, oldStateSource)
-  //           } else {
-  //             // transfer the ref
-  //             newStore.$state[stateKey] = oldStateSource
-  //           }
-  //         }
-  //         // patch direct access properties to allow store.stateProperty to work as
-  //         // store.$state.stateProperty
-  //         set(store, stateKey, toRef(newStore.$state, stateKey))
-  //       })
-
-  //       // remove deleted state properties
-  //       Object.keys(store.$state).forEach((stateKey) => {
-  //         if (!(stateKey in newStore.$state)) {
-  //           del(store, stateKey)
-  //         }
-  //       })
-
-  //       // avoid devtools logging this as a mutation
-  //       isListening = false
-  //       isSyncListening = false
-  //       dinia.state.value[$id] = toRef(newStore._hmrPayload, 'hotState')
-  //       isSyncListening = true
-  //       nextTick().then(() => {
-  //         isListening = true
-  //       })
-
-  //       for (const actionName in newStore._hmrPayload.actions) {
-  //         const action: _Method = newStore[actionName]
-
-  //         set(store, actionName, wrapAction(actionName, action))
-  //       }
-
-  //       // TODO: does this work in both setup and option store?
-  //       for (const getterName in newStore._hmrPayload.getters) {
-  //         const getter: _Method = newStore._hmrPayload.getters[getterName]
-  //         const getterValue = isOptionsStore
-  //           ? // special handling of options api
-  //             computed(() => {
-  //               setActiveDinia(dinia)
-  //               return getter.call(store, store)
-  //             })
-  //           : getter
-
-  //         set(store, getterName, getterValue)
-  //       }
-
-  //       // remove deleted getters
-  //       Object.keys(store._hmrPayload.getters).forEach((key) => {
-  //         if (!(key in newStore._hmrPayload.getters)) {
-  //           del(store, key)
-  //         }
-  //       })
-
-  //       // remove old actions
-  //       Object.keys(store._hmrPayload.actions).forEach((key) => {
-  //         if (!(key in newStore._hmrPayload.actions)) {
-  //           del(store, key)
-  //         }
-  //       })
-
-  //       // update the values used in devtools and to allow deleting new properties later on
-  //       store._hmrPayload = newStore._hmrPayload
-  //       store._getters = newStore._getters
-  //       store._hotUpdating = false
-  //     })
-  //   }
+  // add the hotUpdate before plugins to allow them to override it
+  /* istanbul ignore else */
+  if (__DEV__) {
+    //     store._hotUpdate = markRaw((newStore) => {
+    //       store._hotUpdating = true
+    //       newStore._hmrPayload.state.forEach((stateKey) => {
+    //         if (stateKey in store.$state) {
+    //           const newStateTarget = newStore.$state[stateKey]
+    //           const oldStateSource = store.$state[stateKey]
+    //           if (
+    //             typeof newStateTarget === 'object' &&
+    //             isPlainObject(newStateTarget) &&
+    //             isPlainObject(oldStateSource)
+    //           ) {
+    //             patchObject(newStateTarget, oldStateSource)
+    //           } else {
+    //             // transfer the ref
+    //             newStore.$state[stateKey] = oldStateSource
+    //           }
+    //         }
+    //         // patch direct access properties to allow store.stateProperty to work as
+    //         // store.$state.stateProperty
+    //         set(store, stateKey, toRef(newStore.$state, stateKey))
+    //       })
+    //       // remove deleted state properties
+    //       Object.keys(store.$state).forEach((stateKey) => {
+    //         if (!(stateKey in newStore.$state)) {
+    //           del(store, stateKey)
+    //         }
+    //       })
+    //       // avoid devtools logging this as a mutation
+    //       isListening = false
+    //       isSyncListening = false
+    //       dinia.state.value[$id] = toRef(newStore._hmrPayload, 'hotState')
+    //       isSyncListening = true
+    //       nextTick().then(() => {
+    //         isListening = true
+    //       })
+    //       for (const actionName in newStore._hmrPayload.actions) {
+    //         const action: _Method = newStore[actionName]
+    //         set(store, actionName, wrapAction(actionName, action))
+    //       }
+    //       // TODO: does this work in both setup and option store?
+    //       for (const getterName in newStore._hmrPayload.getters) {
+    //         const getter: _Method = newStore._hmrPayload.getters[getterName]
+    //         const getterValue = isOptionsStore
+    //           ? // special handling of options api
+    //             computed(() => {
+    //               setActiveDinia(dinia)
+    //               return getter.call(store, store)
+    //             })
+    //           : getter
+    //         set(store, getterName, getterValue)
+    //       }
+    //       // remove deleted getters
+    //       Object.keys(store._hmrPayload.getters).forEach((key) => {
+    //         if (!(key in newStore._hmrPayload.getters)) {
+    //           del(store, key)
+    //         }
+    //       })
+    //       // remove old actions
+    //       Object.keys(store._hmrPayload.actions).forEach((key) => {
+    //         if (!(key in newStore._hmrPayload.actions)) {
+    //           del(store, key)
+    //         }
+    //       })
+    //       // update the values used in devtools and to allow deleting new properties later on
+    //       store._hmrPayload = newStore._hmrPayload
+    //       store._getters = newStore._getters
+    //       store._hotUpdating = false
+    //     })
+  }
 
   //   if (__USE_DEVTOOLS__ && IS_CLIENT) {
   //     const nonEnumerable = {
