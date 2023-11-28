@@ -52,8 +52,8 @@ describe('Subscriptions', () => {
 
   flushOptions.forEach((flush) => {
     it('calls once inside components with flush ' + flush, async () => {
-      const pinia = createDinia()
-      setActiveDinia(pinia)
+      const dinia = createDinia()
+      setActiveDinia(dinia)
       const spy1 = vi.fn()
 
       mount(
@@ -64,7 +64,7 @@ describe('Subscriptions', () => {
           },
           template: `<p/>`,
         },
-        { global: { plugins: [pinia] } }
+        { global: { plugins: [dinia] } }
       )
 
       const s1 = useStore()
@@ -234,8 +234,8 @@ describe('Subscriptions', () => {
     })
 
     it('removes on unmount', async () => {
-      const pinia = createDinia()
-      setActiveDinia(pinia)
+      const dinia = createDinia()
+      setActiveDinia(dinia)
       const spy1 = vi.fn()
       const spy2 = vi.fn()
 
@@ -247,7 +247,7 @@ describe('Subscriptions', () => {
           },
           template: `<p/>`,
         },
-        { global: { plugins: [pinia] } }
+        { global: { plugins: [dinia] } }
       )
 
       const s1 = useStore()

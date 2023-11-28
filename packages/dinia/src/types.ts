@@ -256,48 +256,48 @@ export interface StoreProperties<Id extends string> {
    * @internal
    */
   _p: Dinia
-  //   /**
-  //    * Used by devtools plugin to retrieve getters. Removed in production.
-  //    *
-  //    * @internal
-  //    */
-  //   _getters?: string[]
-  //   /**
-  //    * Used (and added) by devtools plugin to detect Setup vs Options API usage.
-  //    *
-  //    * @internal
-  //    */
-  //   _isOptionsAPI?: boolean
-  //   /**
-  //    * Used by devtools plugin to retrieve properties added with plugins. Removed
-  //    * in production. Can be used by the user to add property keys of the store
-  //    * that should be displayed in devtools.
-  //    */
-  //   _customProperties: Set<string>
-  //   /**
-  //    * Handles a HMR replacement of this store. Dev Only.
-  //    *
-  //    * @internal
-  //    */
-  //   _hotUpdate(useStore: StoreGeneric): void
-  //   /**
-  //    * Allows pausing some of the watching mechanisms while the store is being
-  //    * patched with a newer version.
-  //    *
-  //    * @internal
-  //    */
-  //   _hotUpdating: boolean
-  //   /**
-  //    * Payload of the hmr update. Dev only.
-  //    *
-  //    * @internal
-  //    */
-  //   _hmrPayload: {
-  //     state: string[]
-  //     hotState: Ref<StateTree>
-  //     actions: _ActionsTree
-  //     getters: _ActionsTree
-  //   }
+  /**
+   * Used by devtools plugin to retrieve getters. Removed in production.
+   *
+   * @internal
+   */
+  _getters?: string[]
+  /**
+   * Used (and added) by devtools plugin to detect Setup vs Options API usage.
+   *
+   * @internal
+   */
+  _isOptionsAPI?: boolean
+  /**
+   * Used by devtools plugin to retrieve properties added with plugins. Removed
+   * in production. Can be used by the user to add property keys of the store
+   * that should be displayed in devtools.
+   */
+  _customProperties: Set<string>
+  // /**
+  //  * Handles a HMR replacement of this store. Dev Only.
+  //  *
+  //  * @internal
+  //  */
+  // _hotUpdate(useStore: StoreGeneric): void
+  // /**
+  //  * Allows pausing some of the watching mechanisms while the store is being
+  //  * patched with a newer version.
+  //  *
+  //  * @internal
+  //  */
+  // _hotUpdating: boolean
+  // /**
+  //  * Payload of the hmr update. Dev only.
+  //  *
+  //  * @internal
+  //  */
+  // _hmrPayload: {
+  //   state: string[]
+  //   hotState: Ref<StateTree>
+  //   actions: _ActionsTree
+  //   getters: _ActionsTree
+  // }
 }
 
 /**
@@ -413,21 +413,21 @@ export interface _StoreWithState<
  */
 export type _Method = (...args: any[]) => any
 
-// // export type StoreAction<P extends any[], R> = (...args: P) => R
-// // export interface StoreAction<P, R> {
-// //   (...args: P[]): R
-// // }
-
-// // in this type we forget about this because otherwise the type is recursive
-// /**
-//  * Store augmented for actions. For internal usage only.
-//  * For internal use **only**
-//  */
-// export type _StoreWithActions<A> = {
-//   [k in keyof A]: A[k] extends (...args: infer P) => infer R
-//     ? (...args: P) => R
-//     : never
+// export type StoreAction<P extends any[], R> = (...args: P) => R
+// export interface StoreAction<P, R> {
+//   (...args: P[]): R
 // }
+
+// in this type we forget about this because otherwise the type is recursive
+/**
+ * Store augmented for actions. For internal usage only.
+ * For internal use **only**
+ */
+export type _StoreWithActions<A> = {
+  [k in keyof A]: A[k] extends (...args: infer P) => infer R
+    ? (...args: P) => R
+    : never
+}
 
 /**
  * Store augmented with getters. For internal usage only.
@@ -627,31 +627,31 @@ export interface DefineStoreOptions<
         _StoreWithGetters<G> &
         DiniaCustomProperties
     >
-  //   /**
-  //    * Allows hydrating the store during SSR when complex state (like client side only refs) are used in the store
-  //    * definition and copying the value from `dinia.state` isn't enough.
-  //    *
-  //    * @example
-  //    * If in your `state`, you use any `customRef`s, any `computed`s, or any `ref`s that have a different value on
-  //    * Server and Client, you need to manually hydrate them. e.g., a custom ref that is stored in the local
-  //    * storage:
-  //    *
-  //    * ```ts
-  //    * const useStore = defineStore('main', {
-  //    *   state: () => ({
-  //    *     n: useLocalStorage('key', 0)
-  //    *   }),
-  //    *   hydrate(storeState, initialState) {
-  //    *     // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/43826
-  //    *     storeState.n = useLocalStorage('key', 0)
-  //    *   }
-  //    * })
-  //    * ```
-  //    *
-  //    * @param storeState - the current state in the store
-  //    * @param initialState - initialState
-  //    */
-  //   hydrate?(storeState: UnwrapRef<S>, initialState: UnwrapRef<S>): void
+  /**
+   * Allows hydrating the store during SSR when complex state (like client side only refs) are used in the store
+   * definition and copying the value from `dinia.state` isn't enough.
+   *
+   * @example
+   * If in your `state`, you use any `customRef`s, any `computed`s, or any `ref`s that have a different value on
+   * Server and Client, you need to manually hydrate them. e.g., a custom ref that is stored in the local
+   * storage:
+   *
+   * ```ts
+   * const useStore = defineStore('main', {
+   *   state: () => ({
+   *     n: useLocalStorage('key', 0)
+   *   }),
+   *   hydrate(storeState, initialState) {
+   *     // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/43826
+   *     storeState.n = useLocalStorage('key', 0)
+   *   }
+   * })
+   * ```
+   *
+   * @param storeState - the current state in the store
+   * @param initialState - initialState
+   */
+  hydrate?(storeState: UnwrapRef<S>, initialState: UnwrapRef<S>): void
 }
 
 /**
@@ -665,27 +665,27 @@ export interface DefineSetupStoreOptions<
   G,
   A /* extends ActionsTree */
 > extends DefineStoreOptionsBase<S, Store<Id, S, G, A>> {
-  //   /**
-  //    * Extracted actions. Added by useStore(). SHOULD NOT be added by the user when
-  //    * creating the store. Can be used in plugins to get the list of actions in a
-  //    * store defined with a setup function. Note this is always defined
-  //    */
-  //   actions?: A
+  /**
+   * Extracted actions. Added by useStore(). SHOULD NOT be added by the user when
+   * creating the store. Can be used in plugins to get the list of actions in a
+   * store defined with a setup function. Note this is always defined
+   */
+  actions?: A
 }
 
-// /**
-//  * Available `options` when creating a dinia plugin.
-//  */
-// export interface DefineStoreOptionsInPlugin<
-//   Id extends string,
-//   S extends StateTree,
-//   G,
-//   A
-// > extends Omit<DefineStoreOptions<Id, S, G, A>, 'id' | 'actions'> {
-//   /**
-//    * Extracted object of actions. Added by useStore() when the store is built
-//    * using the setup API, otherwise uses the one passed to `defineStore()`.
-//    * Defaults to an empty object if no actions are defined.
-//    */
-//   actions: A
-// }
+/**
+ * Available `options` when creating a dinia plugin.
+ */
+export interface DefineStoreOptionsInPlugin<
+  Id extends string,
+  S extends StateTree,
+  G,
+  A
+> extends Omit<DefineStoreOptions<Id, S, G, A>, 'id' | 'actions'> {
+  /**
+   * Extracted object of actions. Added by useStore() when the store is built
+   * using the setup API, otherwise uses the one passed to `defineStore()`.
+   * Defaults to an empty object if no actions are defined.
+   */
+  actions: A
+}

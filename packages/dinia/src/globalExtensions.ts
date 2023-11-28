@@ -9,9 +9,9 @@ import type { Store, StoreGeneric } from './types'
 declare module 'docuejs/types/docuejs' {
   interface Docue {
     /**
-     * Currently installed pinia instance.
+     * Currently installed dinia instance.
      */
-    $pinia: Dinia
+    $dinia: Dinia
 
     /**
      * Cache of stores instantiated by the current instance. Used by map
@@ -30,7 +30,7 @@ declare module 'docuejs/types/options' {
      * Dinia instance to install in your application. Should be passed to the
      * root Docue.
      */
-    pinia?: Dinia
+    dinia?: Dinia
   }
 }
 
@@ -41,7 +41,7 @@ declare module '@docue/runtime-core' {
     /**
      * Access to the application's Dinia
      */
-    $pinia: Dinia
+    $dinia: Dinia
 
     /**
      * Cache of stores instantiated by the current instance. Used by devtools to

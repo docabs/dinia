@@ -1,7 +1,7 @@
 import { Dinia, DiniaPlugin, setActiveDinia, diniaSymbol } from './rootStore'
 import { ref, App, markRaw, effectScope, isDocue2, Ref } from 'docuejs'
 // import { registerDiniaDevtools, devtoolsPlugin } from './devtools'
-import { IS_CLIENT } from './env'
+import { USE_DEVTOOLS } from './env'
 import { StateTree, StoreGeneric } from './types'
 
 /**
@@ -28,10 +28,10 @@ export function createDinia(): Dinia {
         dinia._a = app
         app.provide(diniaSymbol, dinia)
         app.config.globalProperties.$dinia = dinia
-        // /* istanbul ignore else */
-        // if (__USE_DEVTOOLS__ && IS_CLIENT) {
-        //   registerDiniaDevtools(app, dinia)
-        // }
+        /* istanbul ignore else */
+        if (USE_DEVTOOLS) {
+          // registerDiniaDevtools(app, dinia)
+        }
         toBeInstalled.forEach((plugin) => _p.push(plugin))
         toBeInstalled = []
       }

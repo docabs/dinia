@@ -28,7 +28,7 @@
     "moduleResolution": "node",
     "allowJs": false,
     "skipLibCheck": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "strictNullChecks": true,
     "noImplicitAny": true,
     "noImplicitThis": true,

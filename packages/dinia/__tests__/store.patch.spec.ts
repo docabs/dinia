@@ -138,9 +138,9 @@ describe('store.$patch', () => {
   })
 
   describe('skipping nested objects', () => {
-    const useStore = (pinia?: Dinia) => {
+    const useStore = (dinia?: Dinia) => {
       // create a new store
-      setActiveDinia(pinia || createDinia())
+      setActiveDinia(dinia || createDinia())
       return defineStore({
         id: 'main',
         state: () => ({
@@ -150,9 +150,9 @@ describe('store.$patch', () => {
         }),
       })()
     }
-    // const useStore = (pinia?: Dinia) => {
+    // const useStore = (dinia?: Dinia) => {
     //   // create a new store
-    //   setActiveDinia(pinia || createDinia())
+    //   setActiveDinia(dinia || createDinia())
     //   return defineStore('main', () => {
     //     const arr = ref([] as any[])
     //     const item = ref({ a: 0, b: 0 } as null | { a: number; b?: number })
@@ -162,31 +162,31 @@ describe('store.$patch', () => {
     // }
 
     it('ref of primitive', () => {
-      const pinia = createDinia()
-      const store = useStore(pinia)
+      const dinia = createDinia()
+      const store = useStore(dinia)
       const name = ref('Edu')
       // @ts-expect-error: because it's a ref
       store.$patch({ name })
-      expect(pinia.state.value.main.name).toEqual('Edu')
+      expect(dinia.state.value.main.name).toEqual('Edu')
       expect(store.$state.name).toEqual('Edu')
       expect(store.name).toEqual('Edu')
     })
 
     it('ref of object', () => {
-      const pinia = createDinia()
-      const store = useStore(pinia)
+      const dinia = createDinia()
+      const store = useStore(dinia)
       const item = ref({ a: 1, b: 1 })
       const oldItem = store.item
       // @ts-expect-error: because it's a ref
       store.$state.item = item
       expect(oldItem).toEqual({ a: 0, b: 0 })
-      expect(pinia.state.value.main.item).toEqual({ a: 1, b: 1 })
+      expect(dinia.state.value.main.item).toEqual({ a: 1, b: 1 })
       expect(store.$state.item).toEqual({ a: 1, b: 1 })
       expect(store.item).toEqual({ a: 1, b: 1 })
 
       // @ts-expect-error: because it's a ref
       store.$patch({ item: ref({ a: 2, b: 2 }) })
-      expect(pinia.state.value.main.item).toEqual({ a: 2, b: 2 })
+      expect(dinia.state.value.main.item).toEqual({ a: 2, b: 2 })
       expect(store.$state.item).toEqual({ a: 2, b: 2 })
       expect(store.item).toEqual({ a: 2, b: 2 })
     })

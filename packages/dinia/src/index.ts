@@ -13,10 +13,10 @@ export type {
 
 export { defineStore, skipHydrate } from './store'
 export type {
-  // StoreActions,
+  StoreActions,
   StoreGetters,
   StoreState,
-  // SetupStoreDefinition,
+  SetupStoreDefinition,
 } from './store'
 
 export type {
@@ -28,7 +28,7 @@ export type {
   _GettersTree,
   _ActionsTree,
   _Method,
-  // _StoreWithActions,
+  _StoreWithActions,
   _StoreWithState,
   StoreProperties,
   StoreOnActionListener,
@@ -54,32 +54,32 @@ export type {
   _ExtractGettersFromSetupStore_Keys,
   _ExtractStateFromSetupStore_Keys,
   _UnwrapAll,
-  // _Awaited,
+  _Awaited,
 } from './types'
 export { MutationType } from './types'
 
 export {
-  // mapActions,
+  mapActions,
   mapStores,
-  // mapState,
-  // mapWritableState,
-  // mapGetters,
+  mapState,
+  mapWritableState,
+  mapGetters,
   setMapStoreSuffix,
 } from './mapHelpers'
 
 export { storeToRefs } from './storeToRefs'
 
-// export type {
-//   MapStoresCustomization,
-//   _MapActionsObjectReturn,
-//   _MapActionsReturn,
-//   _MapStateObjectReturn,
-//   _MapStateReturn,
-//   _MapWritableStateObjectReturn,
-//   _MapWritableStateReturn,
-//   _Spread,
-//   _StoreObject,
-// } from './mapHelpers'
+export type {
+  MapStoresCustomization,
+  _MapActionsObjectReturn,
+  _MapActionsReturn,
+  _MapStateObjectReturn,
+  _MapStateReturn,
+  _MapWritableStateObjectReturn,
+  _MapWritableStateReturn,
+  _Spread,
+  _StoreObject,
+} from './mapHelpers'
 
 // export { acceptHMRUpdate } from './hmr'
 

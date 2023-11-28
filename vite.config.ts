@@ -41,6 +41,6 @@ export default defineConfig({
     },
     setupFiles: ['packages/dinia/__tests__/vitest-setup.ts'],
     environment: 'happy-dom',
-    globals: true, // Specifically to make createTestingPinia happy
+    globals: true, // Specifically to make createTestingDinia happy
   },
 })

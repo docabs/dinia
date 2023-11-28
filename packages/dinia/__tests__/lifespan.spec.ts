@@ -41,17 +41,17 @@ describe('Store Lifespan', () => {
     })
   }
 
-  const pinia = createDinia()
+  const dinia = createDinia()
 
-  it('gets the active pinia outside of setup', () => {
-    setActiveDinia(pinia)
+  it('gets the active dinia outside of setup', () => {
+    setActiveDinia(dinia)
     expect(getCurrentInstance()).toBeFalsy()
-    expect(getActiveDinia()).toBe(pinia)
+    expect(getActiveDinia()).toBe(dinia)
   })
 
-  it('gets the active pinia inside of setup', () => {
+  it('gets the active dinia inside of setup', () => {
     expect.assertions(3)
-    const pinia = createDinia()
+    const dinia = createDinia()
     setActiveDinia(undefined)
     expect(getActiveDinia()).toBe(undefined)
 
@@ -59,13 +59,13 @@ describe('Store Lifespan', () => {
       {
         template: 'no',
         setup() {
-          expect(getActiveDinia()).toBe(pinia)
+          expect(getActiveDinia()).toBe(dinia)
         },
       },
-      { global: { plugins: [pinia] } }
+      { global: { plugins: [dinia] } }
     )
     // and outside too
-    expect(getActiveDinia()).toBe(pinia)
+    expect(getActiveDinia()).toBe(dinia)
   })
 
   it('state reactivity outlives component life', () => {
@@ -88,7 +88,7 @@ describe('Store Lifespan', () => {
 
     const options = {
       global: {
-        plugins: [pinia],
+        plugins: [dinia],
       },
     }
 
@@ -113,10 +113,10 @@ describe('Store Lifespan', () => {
 
   it('ref in state reactivity outlives component life', async () => {
     let n: Ref<number>
-    const pinia = createDinia()
-    setActiveDinia(pinia)
+    const dinia = createDinia()
+    setActiveDinia(dinia)
     const globalWatch = vi.fn()
-    const destroy = watch(() => pinia.state.value.a?.n, globalWatch)
+    const destroy = watch(() => dinia.state.value.a?.n, globalWatch)
 
     const useStore = defineStore({
       id: 'a',
@@ -136,7 +136,7 @@ describe('Store Lifespan', () => {
 
     const options = {
       global: {
-        plugins: [pinia],
+        plugins: [dinia],
       },
     }
 
@@ -166,8 +166,8 @@ describe('Store Lifespan', () => {
   })
 
   it('dispose stops store reactivity', () => {
-    const pinia = createDinia()
-    setActiveDinia(pinia)
+    const dinia = createDinia()
+    setActiveDinia(dinia)
     const inStoreWatch = vi.fn()
 
     const useStore = defineStore('a', () => {
@@ -182,7 +182,7 @@ describe('Store Lifespan', () => {
     store.n++
     expect(inStoreWatch).toHaveBeenCalledTimes(1)
 
-    disposeDinia(pinia)
+    disposeDinia(dinia)
     store.n++
     expect(inStoreWatch).toHaveBeenCalledTimes(1)
   })

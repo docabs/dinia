@@ -39,7 +39,7 @@ export type StoreToRefs<SS extends StoreGeneric> = ToRefs<
 export function storeToRefs<SS extends StoreGeneric>(
   store: SS
 ): StoreToRefs<SS> {
-  // See https://github.com/vuejs/pinia/issues/852
+  // See https://github.com/vuejs/dinia/issues/852
   // It's easier to just use toRefs() even if it includes more stuff
   if (isDocue2) {
     // @ts-expect-error: toRefs include methods and others

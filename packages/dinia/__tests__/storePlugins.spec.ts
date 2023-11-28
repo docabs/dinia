@@ -6,7 +6,7 @@ import { App, computed, ref, toRef, watch } from 'docuejs'
 declare module '../src' {
   export interface DiniaCustomProperties<Id> {
     pluginN: number
-    // uid: App['_uid']
+    uid: App['_uid']
     hasApp: boolean
     idFromPlugin: Id
     globalA: string
@@ -43,6 +43,7 @@ describe('store plugins', () => {
     // must call use after installing the plugin
     dinia.use(({ app, store }) => {
       if (!store.$state.hasOwnProperty('pluginN')) {
+        // @ts-expect-error: cannot be a ref yet
         store.$state.pluginN = ref(20)
       }
       // @ts-expect-error: TODO: allow setting refs

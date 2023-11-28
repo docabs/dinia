@@ -31,69 +31,69 @@ describe('State', () => {
   })
 
   it('can be set with patch', () => {
-    const pinia = createDinia()
-    const store = useStore(pinia)
+    const dinia = createDinia()
+    const store = useStore(dinia)
 
     store.$patch({ name: 'a' })
 
     expect(store.name).toBe('a')
     expect(store.$state.name).toBe('a')
-    expect(pinia.state.value.main.name).toBe('a')
+    expect(dinia.state.value.main.name).toBe('a')
   })
 
   it('can be set on store', () => {
-    const pinia = createDinia()
-    const store = useStore(pinia)
+    const dinia = createDinia()
+    const store = useStore(dinia)
 
     store.name = 'a'
 
     expect(store.name).toBe('a')
     expect(store.$state.name).toBe('a')
-    expect(pinia.state.value.main.name).toBe('a')
+    expect(dinia.state.value.main.name).toBe('a')
   })
 
   it('can be set on store.$state', () => {
-    const pinia = createDinia()
-    const store = useStore(pinia)
+    const dinia = createDinia()
+    const store = useStore(dinia)
 
     store.$state.name = 'a'
 
     expect(store.name).toBe('a')
     expect(store.$state.name).toBe('a')
-    expect(pinia.state.value.main.name).toBe('a')
+    expect(dinia.state.value.main.name).toBe('a')
   })
 
   it('can be nested set with patch', () => {
-    const pinia = createDinia()
-    const store = useStore(pinia)
+    const dinia = createDinia()
+    const store = useStore(dinia)
 
     store.$patch({ nested: { n: 3 } })
 
     expect(store.nested.n).toBe(3)
     expect(store.$state.nested.n).toBe(3)
-    expect(pinia.state.value.main.nested.n).toBe(3)
+    expect(dinia.state.value.main.nested.n).toBe(3)
   })
 
   it('can be nested set on store', () => {
-    const pinia = createDinia()
-    const store = useStore(pinia)
+    const dinia = createDinia()
+    const store = useStore(dinia)
 
     store.nested.n = 3
 
     expect(store.nested.n).toBe(3)
     expect(store.$state.nested.n).toBe(3)
-    expect(pinia.state.value.main.nested.n).toBe(3)
+    expect(dinia.state.value.main.nested.n).toBe(3)
   })
 
   it('can be nested set on store.$state', () => {
-    const pinia = createDinia()
-    const store = useStore(pinia)
+    const dinia = createDinia()
+    const store = useStore(dinia)
 
     store.$state.nested.n = 3
 
     expect(store.nested.n).toBe(3)
     expect(store.$state.nested.n).toBe(3)
-    expect(pinia.state.value.main.nested.n).toBe(3)
+    expect(dinia.state.value.main.nested.n).toBe(3)
   })
 
   it('state can be watched', async () => {
@@ -119,11 +119,11 @@ describe('State', () => {
   })
 
   it('can be given a ref', () => {
-    const pinia = createDinia()
-    const store = useStore(pinia)
+    const dinia = createDinia()
+    const store = useStore(dinia)
 
     // If the ref is directly set to the store, it won't work,
-    // it must be set into the `store.$state` so it connects to pinia
+    // it must be set into the `store.$state` so it connects to dinia
     // store.name = ref('Ed')
 
     // @ts-expect-error
@@ -131,12 +131,12 @@ describe('State', () => {
 
     expect(store.name).toBe('Ed')
     expect(store.$state.name).toBe('Ed')
-    expect(pinia.state.value.main.name).toBe('Ed')
+    expect(dinia.state.value.main.name).toBe('Ed')
 
     store.name = 'Other'
     expect(store.name).toBe('Other')
     expect(store.$state.name).toBe('Other')
-    expect(pinia.state.value.main.name).toBe('Other')
+    expect(dinia.state.value.main.name).toBe('Other')
   })
 
   it('unwraps refs', () => {
@@ -149,8 +149,8 @@ describe('State', () => {
       },
     })
 
-    const pinia = createDinia()
-    setActiveDinia(pinia)
+    const dinia = createDinia()
+    setActiveDinia(dinia)
     const useStore = defineStore({
       id: 'main',
       state: () => ({
@@ -164,7 +164,7 @@ describe('State', () => {
 
     expect(store.name).toBe('Eduardo')
     expect(store.$state.name).toBe('Eduardo')
-    expect(pinia.state.value.main).toEqual({
+    expect(dinia.state.value.main).toEqual({
       name: 'Eduardo',
       double: 0,
       counter: 0,
@@ -173,7 +173,7 @@ describe('State', () => {
     name.value = 'Ed'
     expect(store.name).toBe('Ed')
     expect(store.$state.name).toBe('Ed')
-    expect(pinia.state.value.main.name).toBe('Ed')
+    expect(dinia.state.value.main.name).toBe('Ed')
 
     store.name = 'Edu'
     expect(store.name).toBe('Edu')
@@ -205,9 +205,9 @@ describe('State', () => {
   })
 
   it('can hydrate refs', () => {
-    const pinia = createDinia()
-    setActiveDinia(pinia)
-    pinia.state.value.main = {
+    const dinia = createDinia()
+    setActiveDinia(dinia)
+    dinia.state.value.main = {
       stuff: 1,
       a: 2,
       // nested: { a: 2 },
@@ -284,11 +284,11 @@ describe('State', () => {
       state: () => ({ set: new Set() }),
     })
 
-    const pinia = createDinia()
-    pinia.state.value.main = {
+    const dinia = createDinia()
+    dinia.state.value.main = {
       set: new Set([1, 2]),
     }
-    setActiveDinia(pinia)
+    setActiveDinia(dinia)
 
     const store = useStore()
     expect(store.set).toBeInstanceOf(Set)
@@ -302,12 +302,12 @@ describe('State', () => {
       return { setRef, setReactive }
     })
 
-    const pinia = createDinia()
-    pinia.state.value.main = {
+    const dinia = createDinia()
+    dinia.state.value.main = {
       setRef: new Set([1, 2]),
       setReactive: new Set([3, 4]),
     }
-    setActiveDinia(pinia)
+    setActiveDinia(dinia)
 
     const store = useStore()
     expect(store.setRef).toBeInstanceOf(Set)
@@ -326,9 +326,9 @@ describe('State', () => {
     map.set('ssr', 'test')
     map.set('other', 'test2')
 
-    const pinia = createDinia()
-    pinia.state.value.main = { map }
-    setActiveDinia(pinia)
+    const dinia = createDinia()
+    dinia.state.value.main = { map }
+    setActiveDinia(dinia)
 
     const store = useStore()
     expect(store.map).toBeInstanceOf(Map)
@@ -353,9 +353,9 @@ describe('State', () => {
     mapReactive.set('reactive:ssr', 'test')
     mapReactive.set('reactive:other', 'test2')
 
-    const pinia = createDinia()
-    pinia.state.value.main = { mapRef, mapReactive }
-    setActiveDinia(pinia)
+    const dinia = createDinia()
+    dinia.state.value.main = { mapRef, mapReactive }
+    setActiveDinia(dinia)
 
     const store = useStore()
     expect(store.mapRef).toBeInstanceOf(Map)
@@ -390,51 +390,51 @@ describe('State', () => {
       })
     }
 
-    // it('hydrates custom refs options', async () => {
-    //   const pinia = createDinia()
-    //   pinia.state.value.main = { myCustom: 24, other: 'ssr' }
+    it('hydrates custom refs options', async () => {
+      const dinia = createDinia()
+      dinia.state.value.main = { myCustom: 24, other: 'ssr' }
 
-    //   setActiveDinia(pinia)
+      setActiveDinia(dinia)
 
-    //   const useMainOptions = defineStore('main', {
-    //     state: () => ({ myCustom: useCustomRef(), other: 'start' }),
-    //     hydrate(storeState, initialState) {
-    //       // @ts-expect-error: cannot set as a ref
-    //       storeState.myCustom = useCustomRef()
-    //       // Object.assign(store, initialState)
-    //       // const { myCustom, ...rest } = initialState
-    //       // Object.assign(store, rest)
-    //     },
-    //   })
+      const useMainOptions = defineStore('main', {
+        state: () => ({ myCustom: useCustomRef(), other: 'start' }),
+        hydrate(storeState, initialState) {
+          // @ts-expect-error: cannot set as a ref
+          storeState.myCustom = useCustomRef()
+          // Object.assign(store, initialState)
+          // const { myCustom, ...rest } = initialState
+          // Object.assign(store, rest)
+        },
+      })
 
-    //   const main = useMainOptions()
+      const main = useMainOptions()
 
-    //   // skips the value from hydration
-    //   expect(main.myCustom).toBe(0)
-    //   expect(main.$state.myCustom).toBe(0)
-    //   expect(main.other).toBe('ssr')
-    //   expect(main.$state.other).toBe('ssr')
+      // skips the value from hydration
+      expect(main.myCustom).toBe(0)
+      expect(main.$state.myCustom).toBe(0)
+      expect(main.other).toBe('ssr')
+      expect(main.$state.other).toBe('ssr')
 
-    //   expect(spy).toHaveBeenCalledTimes(0)
-    //   main.myCustom++
-    //   main.$state.myCustom++
-    //   main.$patch({ myCustom: 0 })
-    //   main.$patch((state) => {
-    //     state.myCustom++
-    //   })
+      expect(spy).toHaveBeenCalledTimes(0)
+      main.myCustom++
+      main.$state.myCustom++
+      main.$patch({ myCustom: 0 })
+      main.$patch((state) => {
+        state.myCustom++
+      })
 
-    //   expect(main.myCustom).toBe(1)
-    //   expect(main.$state.myCustom).toBe(1)
-    //   expect(main.other).toBe('ssr')
-    //   expect(main.$state.other).toBe('ssr')
-    //   expect(spy).toHaveBeenCalledTimes(4)
-    // })
+      expect(main.myCustom).toBe(1)
+      expect(main.$state.myCustom).toBe(1)
+      expect(main.other).toBe('ssr')
+      expect(main.$state.other).toBe('ssr')
+      expect(spy).toHaveBeenCalledTimes(4)
+    })
 
     it('hydrates custom refs setup', async () => {
-      const pinia = createDinia()
-      pinia.state.value.main = { myCustom: 24 }
+      const dinia = createDinia()
+      dinia.state.value.main = { myCustom: 24 }
 
-      setActiveDinia(pinia)
+      setActiveDinia(dinia)
 
       const useMainOptions = defineStore('main', () => ({
         myCustom: skipHydrate(useCustomRef()),
@@ -457,10 +457,10 @@ describe('State', () => {
 
     // TODO: should warn of nested skipHydrate() calls
     it.skip('hydrates custom nested refs setup', async () => {
-      const pinia = createDinia()
-      pinia.state.value.main = { a: { myCustom: 24 } }
+      const dinia = createDinia()
+      dinia.state.value.main = { a: { myCustom: 24 } }
 
-      setActiveDinia(pinia)
+      setActiveDinia(dinia)
 
       const useMainOptions = defineStore('main', () => ({
         a: ref({

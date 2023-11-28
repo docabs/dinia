@@ -39,7 +39,7 @@ import {
   _ActionsTree,
   SubscriptionCallbackMutation,
   DefineSetupStoreOptions,
-  //   DefineStoreOptionsInPlugin,
+  DefineStoreOptionsInPlugin,
   StoreGeneric,
   _StoreWithGetters,
   _ExtractActionsFromSetupStore,
@@ -48,7 +48,7 @@ import {
   _StoreWithState,
 } from './types'
 import { setActiveDinia, diniaSymbol, Dinia, activeDinia } from './rootStore'
-import { IS_CLIENT } from './env'
+import { IS_CLIENT, USE_DEVTOOLS } from './env'
 // import { patchObject } from './hmr'
 import { addSubscription, triggerSubscriptions, noop } from './subscriptions'
 
@@ -219,10 +219,10 @@ function createSetupStore<
 ): Store<Id, S, G, A> {
   let scope!: EffectScope
 
-  //   const optionsForPlugin: DefineStoreOptionsInPlugin<Id, S, G, A> = assign(
-  //     { actions: {} as A },
-  //     options
-  //   )
+  const optionsForPlugin: DefineStoreOptionsInPlugin<Id, S, G, A> = assign(
+    { actions: {} as A },
+    options
+  )
 
   /* istanbul ignore if */
   if (__DEV__ && !dinia._e.active) {
@@ -277,7 +277,7 @@ function createSetupStore<
   const hotState = ref({} as S)
 
   // avoid triggering too many listeners
-  // https://github.com/vuejs/pinia/issues/1129
+  // https://github.com/vuejs/dinia/issues/1129
   let activeListener: Symbol | undefined
   function $patch(stateMutation: (state: UnwrapRef<S>) => void): void
   function $patch(partialState: _DeepPartial<UnwrapRef<S>>): void
@@ -452,7 +452,7 @@ function createSetupStore<
   //   }
 
   const store: Store<Id, S, G, A> = reactive(
-    __DEV__ || (__USE_DEVTOOLS__ && IS_CLIENT)
+    __DEV__ || USE_DEVTOOLS
       ? assign(
           {
             _hmrPayload,
@@ -527,9 +527,9 @@ function createSetupStore<
       if (__DEV__) {
         //         _hmrPayload.actions[key] = prop
       }
-      //       // list actions so they can be used in plugins
-      //       // @ts-expect-error
-      //       optionsForPlugin.actions[key] = prop
+      // list actions so they can be used in plugins
+      // @ts-expect-error
+      optionsForPlugin.actions[key] = prop
     } else if (__DEV__) {
       //       // add getters for devtools
       //       if (isComputed(prop)) {
@@ -650,25 +650,24 @@ function createSetupStore<
     //     })
   }
 
-  //   if (__USE_DEVTOOLS__ && IS_CLIENT) {
-  //     const nonEnumerable = {
-  //       writable: true,
-  //       configurable: true,
-  //       // avoid warning on devtools trying to display this property
-  //       enumerable: false,
-  //     }
-
-  //     // avoid listing internal properties in devtools
-  //     ;(['_p', '_hmrPayload', '_getters', '_customProperties'] as const).forEach(
-  //       (p) => {
-  //         Object.defineProperty(
-  //           store,
-  //           p,
-  //           assign({ value: store[p] }, nonEnumerable)
-  //         )
-  //       }
-  //     )
-  //   }
+  if (USE_DEVTOOLS) {
+    //     const nonEnumerable = {
+    //       writable: true,
+    //       configurable: true,
+    //       // avoid warning on devtools trying to display this property
+    //       enumerable: false,
+    //     }
+    //     // avoid listing internal properties in devtools
+    //     ;(['_p', '_hmrPayload', '_getters', '_customProperties'] as const).forEach(
+    //       (p) => {
+    //         Object.defineProperty(
+    //           store,
+    //           p,
+    //           assign({ value: store[p] }, nonEnumerable)
+    //         )
+    //       }
+    //     )
+  }
 
   //   /* istanbul ignore if */
   //   if (isDocue2) {
@@ -676,36 +675,36 @@ function createSetupStore<
   //     store._r = true
   //   }
 
-  //   // apply all plugins
-  //   dinia._p.forEach((extender) => {
-  //     /* istanbul ignore else */
-  //     if (__USE_DEVTOOLS__ && IS_CLIENT) {
-  //       const extensions = scope.run(() =>
-  //         extender({
-  //           store: store as Store,
-  //           app: dinia._a,
-  //           dinia,
-  //           options: optionsForPlugin,
-  //         })
-  //       )!
-  //       Object.keys(extensions || {}).forEach((key) =>
-  //         store._customProperties.add(key)
-  //       )
-  //       assign(store, extensions)
-  //     } else {
-  //       assign(
-  //         store,
-  //         scope.run(() =>
-  //           extender({
-  //             store: store as Store,
-  //             app: dinia._a,
-  //             dinia,
-  //             options: optionsForPlugin,
-  //           })
-  //         )!
-  //       )
-  //     }
-  //   })
+  // apply all plugins
+  dinia._p.forEach((extender) => {
+    /* istanbul ignore else */
+    if (USE_DEVTOOLS) {
+      //       const extensions = scope.run(() =>
+      //         extender({
+      //           store: store as Store,
+      //           app: dinia._a,
+      //           dinia,
+      //           options: optionsForPlugin,
+      //         })
+      //       )!
+      //       Object.keys(extensions || {}).forEach((key) =>
+      //         store._customProperties.add(key)
+      //       )
+      //       assign(store, extensions)
+    } else {
+      assign(
+        store,
+        scope.run(() =>
+          extender({
+            store: store as Store,
+            app: dinia._a,
+            dinia,
+            options: optionsForPlugin,
+          })
+        )!
+      )
+    }
+  })
 
   if (
     __DEV__ &&
@@ -721,17 +720,17 @@ function createSetupStore<
     )
   }
 
-  //   // only apply hydrate to option stores with an initial state in dinia
-  //   if (
-  //     initialState &&
-  //     isOptionsStore &&
-  //     (options as DefineStoreOptions<Id, S, G, A>).hydrate
-  //   ) {
-  //     ;(options as DefineStoreOptions<Id, S, G, A>).hydrate!(
-  //       store.$state,
-  //       initialState
-  //     )
-  //   }
+  // only apply hydrate to option stores with an initial state in dinia
+  if (
+    initialState &&
+    isOptionsStore &&
+    (options as DefineStoreOptions<Id, S, G, A>).hydrate
+  ) {
+    ;(options as DefineStoreOptions<Id, S, G, A>).hydrate!(
+      store.$state,
+      initialState
+    )
+  }
 
   isListening = true
   isSyncListening = true
@@ -946,16 +945,16 @@ export function defineStore(
   return useStore
 }
 
-// /**
-//  * Return type of `defineStore()` with a setup function.
-//  * - `Id` is a string literal of the store's name
-//  * - `SS` is the return type of the setup function
-//  * @see {@link StoreDefinition}
-//  */
-// export interface SetupStoreDefinition<Id extends string, SS>
-//   extends StoreDefinition<
-//     Id,
-//     _ExtractStateFromSetupStore<SS>,
-//     _ExtractGettersFromSetupStore<SS>,
-//     _ExtractActionsFromSetupStore<SS>
-//   > {}
+/**
+ * Return type of `defineStore()` with a setup function.
+ * - `Id` is a string literal of the store's name
+ * - `SS` is the return type of the setup function
+ * @see {@link StoreDefinition}
+ */
+export interface SetupStoreDefinition<Id extends string, SS>
+  extends StoreDefinition<
+    Id,
+    _ExtractStateFromSetupStore<SS>,
+    _ExtractGettersFromSetupStore<SS>,
+    _ExtractActionsFromSetupStore<SS>
+  > {}

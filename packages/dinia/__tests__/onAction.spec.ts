@@ -181,7 +181,7 @@ describe('Subscriptions', () => {
     })
 
     it('removes on unmount', async () => {
-      const pinia = createDinia()
+      const dinia = createDinia()
       const spy1 = vi.fn()
       const spy2 = vi.fn()
 
@@ -193,7 +193,7 @@ describe('Subscriptions', () => {
           },
           template: `<p/>`,
         },
-        { global: { plugins: [pinia] } }
+        { global: { plugins: [dinia] } }
       )
 
       const s1 = useStore()

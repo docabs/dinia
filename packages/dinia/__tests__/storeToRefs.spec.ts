@@ -124,32 +124,32 @@ describe('storeToRefs', () => {
     ).toEqual(objectOfRefs({ n: 1, double: 2 }))
   })
 
-  // it('contain plugin states', () => {
-  //   const pinia = createDinia()
-  //   // directly push because no app
-  //   pinia._p.push(() => ({
-  //     // @ts-expect-error: cannot set a ref yet
-  //     pluginN: ref(20),
-  //     // should not appear in refs
-  //     shared: 10,
-  //   }))
-  //   setActiveDinia(pinia)
+  it('contain plugin states', () => {
+    const dinia = createDinia()
+    // directly push because no app
+    dinia._p.push(() => ({
+      // @ts-expect-error: cannot set a ref yet
+      pluginN: ref(20),
+      // should not appear in refs
+      shared: 10,
+    }))
+    setActiveDinia(dinia)
 
-  //   expect(
-  //     storeToRefs(
-  //       defineStore('a', {
-  //         state: () => ({ n: 0 }),
-  //       })()
-  //     )
-  //   ).toEqual(objectOfRefs({ n: 0, pluginN: 20 }))
-  //   expect(
-  //     storeToRefs(
-  //       defineStore('a', () => {
-  //         return { n: ref(0) }
-  //       })()
-  //     )
-  //   ).toEqual(objectOfRefs({ n: 0, pluginN: 20 }))
-  // })
+    expect(
+      storeToRefs(
+        defineStore('a', {
+          state: () => ({ n: 0 }),
+        })()
+      )
+    ).toEqual(objectOfRefs({ n: 0, pluginN: 20 }))
+    expect(
+      storeToRefs(
+        defineStore('a', () => {
+          return { n: ref(0) }
+        })()
+      )
+    ).toEqual(objectOfRefs({ n: 0, pluginN: 20 }))
+  })
 
   tds(() => {
     const store1 = defineStore('a', () => {

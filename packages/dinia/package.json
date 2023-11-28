@@ -47,12 +47,12 @@
   ],
   "devDependencies": {
     "@microsoft/api-extractor": "7.34.4",
-    "@docue/test-utils": "^0.0.2"
+    "@docue/test-utils": "^0.0.3"
   },
   "dependencies": {},
   "peerDependencies": {
     "typescript": ">=4.4.4",
-    "docuejs": "^0.0.2"
+    "docuejs": "^0.0.3"
   },
   "peerDependenciesMeta": {
     "typescript": {

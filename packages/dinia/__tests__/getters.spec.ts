@@ -74,13 +74,13 @@ describe('Getters', () => {
   })
 
   it('supports changing between applications', () => {
-    const pinia1 = createDinia()
-    const pinia2 = createDinia()
-    setActiveDinia(pinia1)
+    const dinia1 = createDinia()
+    const dinia2 = createDinia()
+    setActiveDinia(dinia1)
     const aStore = useA()
 
     // simulate a different application
-    setActiveDinia(pinia2)
+    setActiveDinia(dinia2)
     const bStore = useB()
     bStore.b = 'c'
 
@@ -96,9 +96,9 @@ describe('Getters', () => {
   })
 
   it('keeps getters reactive when hydrating', () => {
-    const pinia = createDinia()
-    setActiveDinia(pinia)
-    pinia.state.value = { main: { name: 'Jack' } }
+    const dinia = createDinia()
+    setActiveDinia(dinia)
+    dinia.state.value = { main: { name: 'Jack' } }
     const store = useStore()
     expect(store.name).toBe('Jack')
     expect(store.upperCaseName).toBe('JACK')

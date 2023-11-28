@@ -14,7 +14,7 @@ import {
   _GettersTree,
   _ActionsTree,
   DiniaCustomStateProperties,
-  //   DefineStoreOptionsInPlugin,
+  DefineStoreOptionsInPlugin,
   StoreGeneric,
 } from './types'
 
@@ -105,22 +105,22 @@ export interface DiniaPluginContext<
   G /* extends _GettersTree<S> */ = _GettersTree<S>,
   A /* extends _ActionsTree */ = _ActionsTree
 > {
-  //   /**
-  //    * dinia instance.
-  //    */
-  //   dinia: Dinia
-  //   /**
-  //    * Current app created with `Docue.createApp()`.
-  //    */
-  //   app: App
-  //   /**
-  //    * Current store being extended.
-  //    */
-  //   store: Store<Id, S, G, A>
-  //   /**
-  //    * Initial options defining the store when calling `defineStore()`.
-  //    */
-  //   options: DefineStoreOptionsInPlugin<Id, S, G, A>
+  /**
+   * dinia instance.
+   */
+  dinia: Dinia
+  /**
+   * Current app created with `Docue.createApp()`.
+   */
+  app: App
+  /**
+   * Current store being extended.
+   */
+  store: Store<Id, S, G, A>
+  /**
+   * Initial options defining the store when calling `defineStore()`.
+   */
+  options: DefineStoreOptionsInPlugin<Id, S, G, A>
 }
 
 /**

@@ -99,13 +99,13 @@ describe('Actions', () => {
   })
 
   it('supports being called between two applications', () => {
-    const pinia1 = createDinia()
-    const pinia2 = createDinia()
-    setActiveDinia(pinia1)
+    const dinia1 = createDinia()
+    const dinia2 = createDinia()
+    setActiveDinia(dinia1)
     const aStore = useA()
 
     // simulate a different application
-    setActiveDinia(pinia2)
+    setActiveDinia(dinia2)
     const bStore = useB()
     bStore.$state.b = 'c'
 
@@ -115,26 +115,26 @@ describe('Actions', () => {
     expect(bStore.$state.b).toBe('c')
   })
 
-  it('can force the pinia', () => {
-    // setup other pinias to force possible override effects on the options effect
-    const pinia11 = createDinia()
-    // const pinia22 = createDinia()
-    setActiveDinia(pinia11)
+  it('can force the dinia', () => {
+    // setup other dinias to force possible override effects on the options effect
+    const dinia11 = createDinia()
+    // const dinia22 = createDinia()
+    setActiveDinia(dinia11)
     useA()
     setActiveDinia(undefined)
 
-    const pinia1 = createDinia()
-    const pinia2 = createDinia()
-    const aStore = useA(pinia1)
+    const dinia1 = createDinia()
+    const dinia2 = createDinia()
+    const aStore = useA(dinia1)
 
-    let bStore = useB(pinia2)
+    let bStore = useB(dinia2)
     bStore.$state.b = 'c'
 
     aStore.swap()
     expect(aStore.$state.a).toBe('b')
     // a different instance of b store was used
     expect(bStore.$state.b).toBe('c')
-    bStore = useB(pinia1)
+    bStore = useB(dinia1)
     expect(bStore.$state.b).toBe('a')
   })
 
