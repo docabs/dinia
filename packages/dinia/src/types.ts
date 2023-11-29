@@ -274,30 +274,30 @@ export interface StoreProperties<Id extends string> {
    * that should be displayed in devtools.
    */
   _customProperties: Set<string>
-  // /**
-  //  * Handles a HMR replacement of this store. Dev Only.
-  //  *
-  //  * @internal
-  //  */
-  // _hotUpdate(useStore: StoreGeneric): void
-  // /**
-  //  * Allows pausing some of the watching mechanisms while the store is being
-  //  * patched with a newer version.
-  //  *
-  //  * @internal
-  //  */
-  // _hotUpdating: boolean
-  // /**
-  //  * Payload of the hmr update. Dev only.
-  //  *
-  //  * @internal
-  //  */
-  // _hmrPayload: {
-  //   state: string[]
-  //   hotState: Ref<StateTree>
-  //   actions: _ActionsTree
-  //   getters: _ActionsTree
-  // }
+  /**
+   * Handles a HMR replacement of this store. Dev Only.
+   *
+   * @internal
+   */
+  _hotUpdate(useStore: StoreGeneric): void
+  /**
+   * Allows pausing some of the watching mechanisms while the store is being
+   * patched with a newer version.
+   *
+   * @internal
+   */
+  _hotUpdating: boolean
+  /**
+   * Payload of the hmr update. Dev only.
+   *
+   * @internal
+   */
+  _hmrPayload: {
+    state: string[]
+    hotState: Ref<StateTree>
+    actions: _ActionsTree
+    getters: _ActionsTree
+  }
 }
 
 /**
