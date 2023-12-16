@@ -35,9 +35,9 @@ declare module '../dist/dinia' {
   // }
 }
 
-const pinia = createDinia()
+const dinia = createDinia()
 
-pinia.use((context) => {
+dinia.use((context) => {
   expectType<_ActionsTree>(context.options.actions)
   expectType<string>(context.store.$id)
   expectType<App>(context.app)
@@ -118,7 +118,7 @@ expectType<{
   mainStore: () => ReturnType<typeof useStore>
 }>(mapStores(useStore))
 
-pinia.use(({ options, store }) => {
+dinia.use(({ options, store }) => {
   const { debounce: debounceOptions } = options
   if (debounceOptions) {
     return Object.keys(debounceOptions).reduce((debouncedActions, action) => {
