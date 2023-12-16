@@ -130,7 +130,7 @@ importers:
         specifier: '>=0.0'
         version: 0.0.3(typescript@5.3.2)
     devDependencies:
-      dinia:
+      diniajs:
         specifier: workspace:*
         version: link:../dinia
       tsup:

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { createTestingDinia, TestingOptions } from './testing'
-import { defineStore } from 'dinia'
+import { defineStore } from 'diniajs'
 import { mount } from '@docue/test-utils'
 import { defineComponent } from 'docuejs'
 

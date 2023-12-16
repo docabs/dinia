@@ -18,7 +18,7 @@ import {
   StateTree,
   _DeepPartial,
   DiniaPluginContext,
-} from 'dinia'
+} from 'diniajs'
 
 export interface TestingOptions {
   /**

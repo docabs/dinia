@@ -21,7 +21,7 @@
     "noEmit": true,
     "paths": {
       "@docabs/dinia/*": ["packages/*/src"],
-      "dinia": ["packages/dinia/src"]
+      "diniajs": ["packages/dinia/src"]
     },
     "target": "esnext",
     "module": "esnext",

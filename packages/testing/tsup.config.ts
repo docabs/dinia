@@ -5,7 +5,7 @@ export default defineConfig({
   clean: true,
   format: ['cjs', 'esm'],
   dts: true,
-  external: ['docuejs', 'dinia'],
+  external: ['docuejs', 'diniajs'],
   tsconfig: './tsconfig.build.json',
   // onSuccess: 'npm run build:fix',
 })
