@@ -302,7 +302,7 @@ async function publishPackage(pkg) {
         'public',
         // specific to dinia
         '--publish-branch',
-        'v2',
+        'main',
       ],
       {
         cwd: pkg.path,

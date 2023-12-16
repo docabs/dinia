@@ -1,6 +1,6 @@
 {
   "name": "@dinia/testing",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Testing module for Dinia",
   "sideEffects": false,
   "exports": {
@@ -28,7 +28,7 @@
     "tsup": "^6.7.0"
   },
   "peerDependencies": {
-    "dinia": ">=0.0.3"
+    "dinia": ">=0.0.4"
   },
   "publishConfig": {
     "access": "public"
