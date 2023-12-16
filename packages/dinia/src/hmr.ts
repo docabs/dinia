@@ -1,5 +1,5 @@
 import { isRef, isReactive, isDocue2 } from 'docuejs'
-import { set } from './utils'
+// import { set } from './utils'
 import { Dinia } from './rootStore'
 import {
   isPlainObject,
@@ -11,15 +11,15 @@ import {
   _ActionsTree,
 } from './types'
 
-// /**
-//  * Checks if a function is a `StoreDefinition`.
-//  *
-//  * @param fn - object to test
-//  * @returns true if `fn` is a StoreDefinition
-//  */
-// export const isUseStore = (fn: any): fn is StoreDefinition => {
-//   return typeof fn === 'function' && typeof fn.$id === 'string'
-// }
+/**
+ * Checks if a function is a `StoreDefinition`.
+ *
+ * @param fn - object to test
+ * @returns true if `fn` is a StoreDefinition
+ */
+export const isUseStore = (fn: any): fn is StoreDefinition => {
+  return typeof fn === 'function' && typeof fn.$id === 'string'
+}
 
 /**
  * Mutates in place `newState` with `oldState` to _hot update_ it. It will
@@ -65,64 +65,64 @@ export function patchObject(
   return newState
 }
 
-// /**
-//  * Creates an _accept_ function to pass to `import.meta.hot` in Vite applications.
-//  *
-//  * @example
-//  * ```js
-//  * const useUser = defineStore(...)
-//  * if (import.meta.hot) {
-//  *   import.meta.hot.accept(acceptHMRUpdate(useUser, import.meta.hot))
-//  * }
-//  * ```
-//  *
-//  * @param initialUseStore - return of the defineStore to hot update
-//  * @param hot - `import.meta.hot`
-//  */
-// export function acceptHMRUpdate<
-//   Id extends string = string,
-//   S extends StateTree = StateTree,
-//   G extends _GettersTree<S> = _GettersTree<S>,
-//   A = _ActionsTree
-// >(initialUseStore: StoreDefinition<Id, S, G, A>, hot: any) {
-//   // strip as much as possible from iife.prod
-//   if (!__DEV__) {
-//     return () => {}
-//   }
-//   return (newModule: any) => {
-//     const pinia: Dinia | undefined = hot.data.pinia || initialUseStore._pinia
+/**
+ * Creates an _accept_ function to pass to `import.meta.hot` in Vite applications.
+ *
+ * @example
+ * ```js
+ * const useUser = defineStore(...)
+ * if (import.meta.hot) {
+ *   import.meta.hot.accept(acceptHMRUpdate(useUser, import.meta.hot))
+ * }
+ * ```
+ *
+ * @param initialUseStore - return of the defineStore to hot update
+ * @param hot - `import.meta.hot`
+ */
+export function acceptHMRUpdate<
+  Id extends string = string,
+  S extends StateTree = StateTree,
+  G extends _GettersTree<S> = _GettersTree<S>,
+  A = _ActionsTree
+>(initialUseStore: StoreDefinition<Id, S, G, A>, hot: any) {
+  // strip as much as possible from iife.prod
+  if (!__DEV__) {
+    return () => {}
+  }
+  return (newModule: any) => {
+    const dinia: Dinia | undefined = hot.data.dinia || initialUseStore._dinia
 
-//     if (!pinia) {
-//       // this store is still not used
-//       return
-//     }
+    if (!dinia) {
+      // this store is still not used
+      return
+    }
 
-//     // preserve the pinia instance across loads
-//     hot.data.pinia = pinia
+    // preserve the dinia instance across loads
+    hot.data.dinia = dinia
 
-//     // console.log('got data', newStore)
-//     for (const exportName in newModule) {
-//       const useStore = newModule[exportName]
-//       // console.log('checking for', exportName)
-//       if (isUseStore(useStore) && pinia._s.has(useStore.$id)) {
-//         // console.log('Accepting update for', useStore.$id)
-//         const id = useStore.$id
+    // console.log('got data', newStore)
+    for (const exportName in newModule) {
+      const useStore = newModule[exportName]
+      // console.log('checking for', exportName)
+      if (isUseStore(useStore) && dinia._s.has(useStore.$id)) {
+        // console.log('Accepting update for', useStore.$id)
+        const id = useStore.$id
 
-//         if (id !== initialUseStore.$id) {
-//           console.warn(
-//             `The id of the store changed from "${initialUseStore.$id}" to "${id}". Reloading.`
-//           )
-//           // return import.meta.hot.invalidate()
-//           return hot.invalidate()
-//         }
+        if (id !== initialUseStore.$id) {
+          console.warn(
+            `The id of the store changed from "${initialUseStore.$id}" to "${id}". Reloading.`
+          )
+          // return import.meta.hot.invalidate()
+          return hot.invalidate()
+        }
 
-//         const existingStore: StoreGeneric = pinia._s.get(id)!
-//         if (!existingStore) {
-//           console.log(`[Dinia]: skipping hmr because store doesn't exist yet`)
-//           return
-//         }
-//         useStore(pinia, existingStore)
-//       }
-//     }
-//   }
-// }
+        const existingStore: StoreGeneric = dinia._s.get(id)!
+        if (!existingStore) {
+          console.log(`[Dinia]: skipping hmr because store doesn't exist yet`)
+          return
+        }
+        useStore(dinia, existingStore)
+      }
+    }
+  }
+}

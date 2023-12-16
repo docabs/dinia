@@ -1,12 +1,36 @@
 {
-  "name": "testing",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "name": "@dinia/testing",
+  "version": "0.0.3",
+  "description": "Testing module for Dinia",
+  "sideEffects": false,
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "require": "./dist/index.js",
+    "import": "./dist/index.mjs"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/*.js",
+    "dist/*.mjs",
+    "dist/*.d.ts"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s --commit-path . -l @pinia/testing -r 1"
+  },
+  "dependencies": {
+    "docuejs": ">=0.0"
+  },
+  "devDependencies": {
+    "dinia": "workspace:*",
+    "tsup": "^6.7.0"
+  },
+  "peerDependencies": {
+    "dinia": ">=0.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

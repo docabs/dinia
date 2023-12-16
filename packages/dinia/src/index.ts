@@ -45,7 +45,7 @@ export type {
   DefineStoreOptionsBase,
   DefineStoreOptions,
   DefineSetupStoreOptions,
-  // DefineStoreOptionsInPlugin,
+  DefineStoreOptionsInPlugin,
   _ExtractActionsFromSetupStore,
   _ExtractGettersFromSetupStore,
   _ExtractStateFromSetupStore,
@@ -81,7 +81,7 @@ export type {
   _StoreObject,
 } from './mapHelpers'
 
-// export { acceptHMRUpdate } from './hmr'
+export { acceptHMRUpdate } from './hmr'
 
 // export { DiniaDocuePlugin } from './docue2-plugin'
 
